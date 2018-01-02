@@ -1,0 +1,33 @@
+{
+    "name": "fazland/dto-management",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Massimiliano Braglia",
+            "email": "massimiliano.braglia@fazland.com"
+        }
+    ],
+    "require": {
+        "cakephp/chronos": "^1.1",
+        "fazland/api-platform-bundle": "1.x-dev",
+        "kcs/serializer": "2.x-dev",
+        "sensio/framework-extra-bundle": "^5.1",
+        "symfony/framework-bundle": "^4.0"
+    },
+    "require-dev": {
+        "php-mock/php-mock": "^1.0",
+        "php-mock/php-mock-prophecy": "^0.0.2",
+        "phpunit/phpunit": "^6.5",
+        "symfony/browser-kit": "^4.0",
+        "symfony/var-dumper": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Fazland\\DtoManagementBundle\\": "src/",
+            "Fazland\\DtoManagementBundle\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

@@ -1,0 +1,14 @@
+framework:
+    test: ~
+    secret: secret
+    router:
+        resource: "%kernel.root_dir%/routing.yml"
+
+dto_management:
+    namespaces:
+        - { namespace: 'App\', base_dir: './' }
+
+services:
+    Fazland\DtoManagementBundle\Model\Finder\ServiceLocatorRegistry:
+        arguments:
+            - ~

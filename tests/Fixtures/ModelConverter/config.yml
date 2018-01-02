@@ -1,0 +1,21 @@
+framework:
+    test: ~
+    secret: secret
+    router:
+        resource: "%kernel.root_dir%/routing.yml"
+
+services:
+    Fazland\DtoManagementBundle\Model\Finder\ServiceLocatorRegistry:
+        arguments:
+            - ~
+
+    Fazland\DtoManagementBundle\ParamConverter\ApiModelParamConverter:
+        autowire: true
+        tags:
+            - 'request.param_converter'
+
+    Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\Model\:
+        resource: './Model/*'
+        exclude: './Model/{Interfaces}'
+        autowire: true
+        shared: false
