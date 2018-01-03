@@ -4,8 +4,6 @@ namespace Fazland\DtoManagementBundle\Tests\Fixtures\DependencyInjection;
 
 use Fazland\DtoManagementBundle\DtoManagementBundle;
 use Fazland\DtoManagementBundle\Tests\Fixtures\TestKernel;
-use Fazland\ApiPlatformBundle\ApiPlatformBundle;
-use Kcs\Serializer\Bundle\SerializerBundle;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -20,8 +18,6 @@ class AppKernel extends TestKernel
         return [
             new FrameworkBundle(),
             new SensioFrameworkExtraBundle(),
-            new ApiPlatformBundle(),
-            new SerializerBundle(),
             new DtoManagementBundle(),
             new AppBundle(),
         ];

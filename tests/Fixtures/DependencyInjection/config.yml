@@ -6,9 +6,12 @@ framework:
 
 dto_management:
     namespaces:
-        - { namespace: 'App\', base_dir: './' }
+        - { namespace: 'Fazland\DtoManagementBundle\Tests\Fixtures\DependencyInjection\Model', base_dir: '%kernel.root_dir%/Model' }
 
 services:
-    Fazland\DtoManagementBundle\Model\Finder\ServiceLocatorRegistry:
-        arguments:
-            - ~
+    Fazland\DtoManagementBundle\Tests\Fixtures\DependencyInjection\Model\:
+        resource: './Model/*'
+        exclude: './Model/{Interfaces}'
+        autowire: true
+        autoconfigure: true
+        shared: false

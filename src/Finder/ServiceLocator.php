@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Fazland\DtoManagementBundle\Model\Finder;
+namespace Fazland\DtoManagementBundle\Finder;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
@@ -42,11 +42,11 @@ class ServiceLocator implements ContainerInterface
         }
 
         if (null === $last) {
-            throw new ServiceNotFoundException($id, null, null, array_keys($this->factories));
+            throw new ServiceNotFoundException((string) $id, null, null, array_keys($this->factories));
         }
 
         if (true === $factory = $this->factories[$last]) {
-            throw new ServiceCircularReferenceException($last, [$last, $last]);
+            throw new ServiceCircularReferenceException((string) $last, [$last, $last]);
         }
 
         $this->factories[$last] = true;

@@ -2,12 +2,14 @@
 
 namespace Fazland\DtoManagementBundle\DependencyInjection;
 
-use Fazland\DtoManagementBundle\Model\Finder\Finder;
-use Fazland\DtoManagementBundle\Model\Finder\ServiceLocator;
-use Fazland\DtoManagementBundle\Model\Finder\ServiceLocatorRegistry;
+use Fazland\DtoManagementBundle\Finder\Finder;
+use Fazland\DtoManagementBundle\Finder\ServiceLocator;
+use Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 
 class DtoManagementExtension extends Extension
@@ -18,8 +20,54 @@ class DtoManagementExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         $config = $this->processConfiguration(new Configuration(), $configs);
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
-        foreach ($config['namespaces'] as $value) {
+        $loader->load('services.xml');
+
+        /** @var Definition[] $locators */
+        $locators = [];
+        foreach ($this->process($container, $config['namespaces']) as $interface => $definition) {
+            if (isset($locators[$interface])) {
+                // How can this case be possible?!
+                $arguments = array_merge($locators[$interface]->getArgument(0), $definition->getArgument(0));
+                $locators[$interface]->setArguments([array_values(array_combine($arguments, $arguments))]);
+            } else {
+                $locators[$interface] = $definition;
+            }
+        }
+
+        $container->findDefinition(ServiceLocatorRegistry::class)
+            ->setArgument(0, $locators);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNamespace(): string
+    {
+        return 'http://fazland.com/schema/dic/'.$this->getAlias();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getXsdValidationBasePath(): string
+    {
+        return __DIR__.'/../Resources/config/schema';
+    }
+
+    /**
+     * Processes namespaces and yield Service locator definitions.
+     * Interface names are the keys.
+     *
+     * @param ContainerBuilder $container
+     * @param array            $namespaces
+     *
+     * @return \Generator|Definition[]
+     */
+    private function process(ContainerBuilder $container, array $namespaces)
+    {
+        foreach ($namespaces as $value) {
             $namespace = $value['namespace'];
             $baseDir = $value['base_dir'];
 
@@ -31,11 +79,20 @@ class DtoManagementExtension extends Extension
                 $baseDir .= DIRECTORY_SEPARATOR;
             }
 
-            $this->process($container, $namespace, $baseDir);
+            yield from $this->processNamespace($container, $namespace, $baseDir);
         }
     }
 
-    private function process(ContainerBuilder $container, string $namespace, string $baseDir): void
+    /**
+     * Searches through the base dir recursively for interfaces and their implemetations.
+     *
+     * @param ContainerBuilder $container
+     * @param string           $namespace
+     * @param string           $baseDir
+     *
+     * @return Definition[]
+     */
+    private function processNamespace(ContainerBuilder $container, string $namespace, string $baseDir): array
     {
         $interfaces = Finder::findClasses($container, $namespace.'Interfaces\\', $baseDir.'Interfaces/');
         $models = array_fill_keys($interfaces, []);
@@ -62,23 +119,6 @@ class DtoManagementExtension extends Extension
             $locators[$interface] = $definition;
         }
 
-        $container->findDefinition(ServiceLocatorRegistry::class)
-            ->setArgument(0, $locators);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getNamespace(): string
-    {
-        return 'http://fazland.com/schema/dic/'.$this->getAlias();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getXsdValidationBasePath(): string
-    {
-        return __DIR__.'/../Resources/config/schema';
+        return $locators;
     }
 }

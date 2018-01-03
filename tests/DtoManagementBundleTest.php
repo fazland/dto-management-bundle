@@ -22,7 +22,7 @@ class DtoManagementBundleTest extends TestCase
     public function tearDown()
     {
         $fs = new Filesystem();
-        $fs->remove(__DIR__.'/../Fixtures/ModelConverter/cache');
-        $fs->remove(__DIR__.'/../Fixtures/ModelConverter/logs');
+        $fs->remove(__DIR__.'/Fixtures/DependencyInjection/cache');
+        $fs->remove(__DIR__.'/Fixtures/DependencyInjection/logs');
     }
 }

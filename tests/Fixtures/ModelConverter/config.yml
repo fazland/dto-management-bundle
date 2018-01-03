@@ -4,16 +4,11 @@ framework:
     router:
         resource: "%kernel.root_dir%/routing.yml"
 
+dto_management:
+    namespaces:
+        - { namespace: 'Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\Model', base_dir: '%kernel.root_dir%/Model' }
+
 services:
-    Fazland\DtoManagementBundle\Model\Finder\ServiceLocatorRegistry:
-        arguments:
-            - ~
-
-    Fazland\DtoManagementBundle\ParamConverter\ApiModelParamConverter:
-        autowire: true
-        tags:
-            - 'request.param_converter'
-
     Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\Model\:
         resource: './Model/*'
         exclude: './Model/{Interfaces}'

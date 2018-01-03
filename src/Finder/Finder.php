@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Fazland\DtoManagementBundle\Model\Finder;
+namespace Fazland\DtoManagementBundle\Finder;
 
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Resource\GlobResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -9,19 +10,22 @@ class Finder
 {
     public static function findClasses(ContainerBuilder $container, string $namespace, string $path): array
     {
-        $path = realpath($path);
-        $resource = new GlobResource($path, '*', true);
-        $prefixLen = strlen($path);
+        $realpath = realpath($path);
+        if (null === $realpath) {
+            throw new InvalidConfigurationException($path.' does not exist');
+        }
+
+        $resource = new GlobResource($realpath, '*', true);
+        $prefixLen = strlen($realpath);
         $classes = [];
 
-        foreach ($resource as $path => $info) {
-            if (! preg_match('/\\.php$/', $path, $m) || ! $info->isReadable()) {
+        foreach ($resource as $realpath => $info) {
+            if (! preg_match('/\\.php$/', $realpath, $m) || ! $info->isReadable()) {
                 continue;
             }
 
-            $class = $namespace.ltrim(str_replace('/', '\\', substr($path, $prefixLen, -strlen($m[0]))), '\\');
+            $class = $namespace.ltrim(str_replace('/', '\\', substr($realpath, $prefixLen, -strlen($m[0]))), '\\');
             if (! preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+(?:\\\\[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+)*+$/', $class)) {
-                die;
                 continue;
             }
 

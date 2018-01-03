@@ -4,5 +4,4 @@ namespace Fazland\DtoManagementBundle\Tests\Fixtures\DependencyInjection\Model\I
 
 interface UserInterface
 {
-
 }

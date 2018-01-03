@@ -6,5 +6,4 @@ use Fazland\DtoManagementBundle\Tests\Fixtures\DependencyInjection\Model\Interfa
 
 class User implements UserInterface
 {
-
 }
