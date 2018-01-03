@@ -45,6 +45,8 @@ class ApiModelParamConverter implements ParamConverterInterface
      */
     public function supports(ParamConverter $configuration): bool
     {
-        return $this->registry->has($configuration->getClass());
+        $class = $configuration->getClass();
+
+        return null !== $class && $this->registry->has($class);
     }
 }
