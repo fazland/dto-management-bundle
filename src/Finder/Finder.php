@@ -11,7 +11,7 @@ class Finder
     public static function findClasses(ContainerBuilder $container, string $namespace, string $path): array
     {
         $realpath = realpath($path);
-        if (null === $realpath) {
+        if (false === $realpath) {
             throw new InvalidConfigurationException($path.' does not exist');
         }
 
