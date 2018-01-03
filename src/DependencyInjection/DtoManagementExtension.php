@@ -17,7 +17,7 @@ class DtoManagementExtension extends Extension
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $config = $this->processConfiguration(new Configuration(), $configs);
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
@@ -65,7 +65,7 @@ class DtoManagementExtension extends Extension
      *
      * @return \Generator|Definition[]
      */
-    private function process(ContainerBuilder $container, array $namespaces)
+    private function process(ContainerBuilder $container, array $namespaces): \Generator
     {
         foreach ($namespaces as $value) {
             $namespace = $value['namespace'];

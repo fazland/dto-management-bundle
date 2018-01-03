@@ -2,6 +2,7 @@
 
 namespace Fazland\DtoManagementBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\NodeParentInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -10,7 +11,7 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): NodeParentInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('dto_management');

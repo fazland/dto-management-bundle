@@ -21,7 +21,10 @@ class ApiModelParamConverter implements ParamConverterInterface
         $this->registry = $registry;
     }
 
-    public function apply(Request $request, ParamConverter $configuration)
+    /**
+     * {@inheritdoc}
+     */
+    public function apply(Request $request, ParamConverter $configuration): bool
     {
         $version = $request->attributes->get('_version', date_create()->format('Ymd'));
         $locator = $this->registry->get($configuration->getClass());
@@ -37,7 +40,10 @@ class ApiModelParamConverter implements ParamConverterInterface
         return true;
     }
 
-    public function supports(ParamConverter $configuration)
+    /**
+     * {@inheritdoc}
+     */
+    public function supports(ParamConverter $configuration): bool
     {
         return $this->registry->has($configuration->getClass());
     }

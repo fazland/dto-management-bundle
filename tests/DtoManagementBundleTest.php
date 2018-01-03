@@ -11,7 +11,7 @@ class DtoManagementBundleTest extends TestCase
     /**
      * @group functional
      */
-    public function testApplyShouldFillRequestAttributes()
+    public function testApplyShouldFillRequestAttributes(): void
     {
         $kernel = new AppKernel('test', true);
         $kernel->boot();
@@ -19,7 +19,10 @@ class DtoManagementBundleTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function tearDown()
+    /**
+     * {@inheritdoc}
+     */
+    public function tearDown(): void
     {
         $fs = new Filesystem();
         $fs->remove(__DIR__.'/Fixtures/DependencyInjection/cache');

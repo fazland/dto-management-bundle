@@ -15,7 +15,10 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class DtoManagementExtensionTest extends TestCase
 {
-    protected function tearDown()
+    /**
+     * {@inheritdoc}
+     */
+    protected function tearDown(): void
     {
         Mock::disableAll();
     }

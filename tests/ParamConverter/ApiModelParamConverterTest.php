@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class ApiModelParamConverterTest extends WebTestCase
 {
@@ -30,7 +31,10 @@ class ApiModelParamConverterTest extends WebTestCase
      */
     private $converter;
 
-    protected function setUp()
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
     {
         $this->serviceLocatorRegistry = $this->prophesize(ServiceLocatorRegistry::class);
         $this->converter = new ApiModelParamConverter($this->serviceLocatorRegistry->reveal());
@@ -39,7 +43,7 @@ class ApiModelParamConverterTest extends WebTestCase
     /**
      * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function testApplyShouldThrowHttpNotFoundExceptionIfServiceCannotBeFound()
+    public function testApplyShouldThrowHttpNotFoundExceptionIfServiceCannotBeFound(): void
     {
         $request = $this->prophesize(Request::class);
 
@@ -56,7 +60,7 @@ class ApiModelParamConverterTest extends WebTestCase
         $this->assertFalse($this->converter->apply($request->reveal(), $converter));
     }
 
-    public function testApplyShouldReturnFalseOnError()
+    public function testApplyShouldReturnFalseOnError(): void
     {
         $request = $this->prophesize(Request::class);
 
@@ -73,7 +77,7 @@ class ApiModelParamConverterTest extends WebTestCase
         $this->assertFalse($this->converter->apply($request->reveal(), $converter));
     }
 
-    public function testSupportsShouldReturnTrueIfModelIsPresentInRegistry()
+    public function testSupportsShouldReturnTrueIfModelIsPresentInRegistry(): void
     {
         $converter = new ParamConverter([
             'name' => 'user',
@@ -84,7 +88,7 @@ class ApiModelParamConverterTest extends WebTestCase
         $this->assertTrue($this->converter->supports($converter));
     }
 
-    public function testSupportsShouldReturnFalseIfModelIsNotPresentInRegistry()
+    public function testSupportsShouldReturnFalseIfModelIsNotPresentInRegistry(): void
     {
         $converter = new ParamConverter([
             'name' => 'user',
@@ -98,7 +102,7 @@ class ApiModelParamConverterTest extends WebTestCase
     /**
      * @group functional
      */
-    public function testApplyShouldFillRequestAttributes()
+    public function testApplyShouldFillRequestAttributes(): void
     {
         $client = static::createClient();
 
@@ -109,12 +113,18 @@ class ApiModelParamConverterTest extends WebTestCase
         $this->assertEquals(User20171215::class, $client->getResponse()->getContent());
     }
 
-    protected static function createKernel(array $options = [])
+    /**
+     * {@inheritdoc}
+     */
+    protected static function createKernel(array $options = []): KernelInterface
     {
         return new AppKernel('test', true);
     }
 
-    public function tearDown()
+    /**
+     * {@inheritdoc}
+     */
+    public function tearDown(): void
     {
         $fs = new Filesystem();
         $fs->remove(__DIR__.'/../Fixtures/ModelConverter/cache');
