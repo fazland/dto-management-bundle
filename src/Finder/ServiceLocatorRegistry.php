@@ -27,4 +27,9 @@ class ServiceLocatorRegistry
     {
         return isset($this->locators[$interface]);
     }
+
+    public function getInterfaces(): array
+    {
+        return array_keys($this->locators);
+    }
 }
