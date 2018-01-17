@@ -23,57 +23,13 @@ class DtoManagementExtensionTest extends TestCase
         Mock::disableAll();
     }
 
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     */
-    public function testLoadShouldThrowIfEmptyModelDir(): void
-    {
-        $config = [
-            [
-                'namespaces' => [
-                    [
-                        'namespace' => 'Fazland\\DtoManagementBundle\\Tests\\Fixtures\\DependencyInjection\\BarModel',
-                        'base_dir' => 'path/to/bar/dir',
-                    ],
-                ],
-            ],
-        ];
-
-        $mock = new Spy(
-            'Fazland\DtoManagementBundle\Finder',
-            'realpath',
-            function ($value) {
-                switch ($value) {
-                    case 'path/to/bar/dir/Interfaces/':
-                        return false;
-
-                    default:
-                        return realpath(__DIR__.'/../Fixtures/DependencyInjection/Model');
-                }
-            }
-        );
-
-        $mock->enable();
-
-        $container = new ContainerBuilder();
-
-        $extension = new DtoManagementExtension();
-        $extension->load($config, $container);
-    }
-
     public function testLoadShouldCreateModelServices(): void
     {
         $config = [
             [
                 'namespaces' => [
-                    [
-                        'namespace' => 'Fazland\\DtoManagementBundle\\Tests\\Fixtures\\DependencyInjection\\Model',
-                        'base_dir' => 'path/to/first/dir',
-                    ],
-                    [
-                        'namespace' => 'Fazland\\DtoManagementBundle\\Tests\\Fixtures\\DependencyInjection\\FooModel',
-                        'base_dir' => 'path/to/second/dir',
-                    ],
+                    'Fazland\\DtoManagementBundle\\Tests\\Fixtures\\DependencyInjection\\Model',
+                    'Fazland\\DtoManagementBundle\\Tests\\Fixtures\\DependencyInjection\\FooModel',
                 ],
             ],
         ];

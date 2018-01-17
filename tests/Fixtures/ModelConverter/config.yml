@@ -6,7 +6,7 @@ framework:
 
 dto_management:
     namespaces:
-        - { namespace: 'Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\Model', base_dir: '%kernel.root_dir%/Model' }
+        - 'Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\Model'
 
 services:
     Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\Model\:

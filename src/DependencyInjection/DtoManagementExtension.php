@@ -5,6 +5,7 @@ namespace Fazland\DtoManagementBundle\DependencyInjection;
 use Fazland\DtoManagementBundle\Finder\Finder;
 use Fazland\DtoManagementBundle\Finder\ServiceLocator;
 use Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry;
+use Kcs\ClassFinder\Finder\ComposerFinder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -67,19 +68,8 @@ class DtoManagementExtension extends Extension
      */
     private function process(ContainerBuilder $container, array $namespaces): \Generator
     {
-        foreach ($namespaces as $value) {
-            $namespace = $value['namespace'];
-            $baseDir = $value['base_dir'];
-
-            if ('\\' !== substr($namespace, -1)) {
-                $namespace .= '\\';
-            }
-
-            if (DIRECTORY_SEPARATOR !== substr($baseDir, -1)) {
-                $baseDir .= DIRECTORY_SEPARATOR;
-            }
-
-            yield from $this->processNamespace($container, $namespace, $baseDir);
+        foreach ($namespaces as $namespace) {
+            yield from $this->processNamespace($container, $namespace);
         }
     }
 
@@ -88,37 +78,59 @@ class DtoManagementExtension extends Extension
      *
      * @param ContainerBuilder $container
      * @param string           $namespace
-     * @param string           $baseDir
      *
      * @return Definition[]
      */
-    private function processNamespace(ContainerBuilder $container, string $namespace, string $baseDir): array
+    private function processNamespace(ContainerBuilder $container, string $namespace): array
     {
-        $interfaces = Finder::findClasses($container, $namespace.'Interfaces\\', $baseDir.'Interfaces/');
-        $models = array_fill_keys($interfaces, []);
+        $modelsByInterface = [];
 
-        $classes = Finder::findClasses($container, $namespace, $baseDir);
+        foreach ($this->getInterfaces($namespace) as $interface => $unused) {
+            $container->getReflectionClass($interface);
+            $models = [];
 
-        foreach ($classes as $class) {
-            if (! preg_match('/^'.str_replace('\\', '\\\\', $namespace).'v\d+\\\\v(\d{8})\\\\/', $class, $m)) {
-                continue;
-            }
+            $finder = new ComposerFinder();
+            $finder->inNamespace($namespace)
+                ->implementationOf($interface);
 
-            $r = $container->getReflectionClass($class);
-            foreach ($r->getInterfaceNames() as $interfaceName) {
-                if (array_key_exists($interfaceName, $models)) {
-                    $models[$interfaceName][$m[1]] = new Reference($r->getName());
+            foreach ($finder as $class => $reflector) {
+                $container->getReflectionClass($class);
+
+                if (! preg_match('/^'.str_replace('\\', '\\\\', $namespace).'\\\\v\d+\\\\v(\d{8})\\\\/', $class, $m)) {
+                    continue;
                 }
+
+                $models[$m[1]] = new Reference($reflector->getName());
             }
+
+            $modelsByInterface[$interface] = $models;
         }
 
         $locators = [];
-        foreach ($models as $interface => $versions) {
+        foreach ($modelsByInterface as $interface => $versions) {
             $definition = new Definition(ServiceLocator::class, [$versions]);
             $definition->addTag('container.service_locator');
             $locators[$interface] = $definition;
         }
 
         return $locators;
+    }
+
+    /**
+     * Searches all the interfaces into the specified namespace.
+     *
+     * @param string $namespace
+     * @return \Generator|\ReflectionClass[]
+     */
+    private function getInterfaces(string $namespace): \Generator
+    {
+        $finder = new ComposerFinder();
+        $finder
+            ->inNamespace($namespace)
+            ->filter(function (\ReflectionClass $reflectionClass) {
+                return $reflectionClass->isInterface();
+            });
+
+        yield from $finder;
     }
 }

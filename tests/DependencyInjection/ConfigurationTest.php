@@ -32,27 +32,15 @@ class ConfigurationTest extends TestCase
     {
         $expected = [
             'namespaces' => [
-                [
-                    'namespace' => 'App\\Model',
-                    'base_dir' => 'path/to/base/dir',
-                ],
-                [
-                    'namespace' => 'App\\Model',
-                    'base_dir' => 'path/to/base/dir',
-                ],
+                'App\\Model',
+                'App\\Model',
             ],
         ];
 
         $config = $this->getConfiguration([
             'namespaces' => [
-                [
-                    'namespace' => 'App\\Model',
-                    'base_dir' => 'path/to/base/dir',
-                ],
-                [
-                    'namespace' => 'App\\Model',
-                    'base_dir' => 'path/to/base/dir',
-                ],
+                'App\\Model',
+                'App\\Model',
             ],
         ]);
 

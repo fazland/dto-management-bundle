@@ -17,27 +17,12 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('dto_management');
 
         $rootNode
+            ->fixXmlConfig('namespace')
             ->children()
                 ->arrayNode('namespaces')
                     ->isRequired()
-                    ->validate()
-                        ->ifTrue(function ($values): bool {
-                            return 0 === count($values);
-                        })
-                        ->thenInvalid('You must specify at least one namespace and its base directory')
-                    ->end()
-                    ->arrayPrototype()
-                        ->children()
-                            ->scalarNode('namespace')
-                                ->cannotBeEmpty()
-                                ->info('Namespace where dtos can be found.')
-                            ->end()
-                            ->scalarNode('base_dir')
-                                ->cannotBeEmpty()
-                                ->info('Directory where dtos can be found.')
-                            ->end()
-                        ->end()
-                    ->end()
+                    ->requiresAtLeastOneElement()
+                    ->scalarPrototype()->end()
                 ->end()
             ->end()
         ;

@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": "^7.1",
+        "kcs/class-finder": "^1.0@dev",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/framework-bundle": "^4.0"
     },
