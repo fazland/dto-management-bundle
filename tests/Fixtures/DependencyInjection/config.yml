@@ -15,3 +15,5 @@ services:
         autowire: true
         autoconfigure: true
         shared: false
+
+    Fazland\DtoManagementBundle\Tests\Fixtures\DependencyInjection\Transformer\TestTransform: ~

@@ -11,15 +11,19 @@
     ],
     "require": {
         "php": "^7.1",
-        "kcs/class-finder": "^1.0@dev",
+        "kcs/class-finder": "^0.1",
+        "ocramius/proxy-manager": "^2.1",
         "sensio/framework-extra-bundle": "^5.1",
-        "symfony/framework-bundle": "^4.0"
+        "symfony/expression-language": "^4.0",
+        "symfony/framework-bundle": "^4.0",
+        "symfony/security": "^4.0"
     },
     "require-dev": {
         "php-mock/php-mock": "^1.0",
         "php-mock/php-mock-prophecy": "^0.0.2",
         "phpunit/phpunit": "^6.5",
         "symfony/browser-kit": "^4.0",
+        "symfony/security-bundle": "^4.0",
         "symfony/var-dumper": "^4.0",
         "symfony/yaml": "^4.0"
     },

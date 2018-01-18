@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Fazland\DtoManagementBundle\Tests\Fixtures\DependencyInjection;
+namespace Fazland\DtoManagementBundle\Tests\Fixtures\Proxy;
 
 use Fazland\DtoManagementBundle\DtoManagementBundle;
 use Fazland\DtoManagementBundle\Tests\Fixtures\TestKernel;
@@ -20,6 +20,7 @@ class AppKernel extends TestKernel
             new FrameworkBundle(),
             new SensioFrameworkExtraBundle(),
             new DtoManagementBundle(),
+            new SecurityBundle(),
             new AppBundle(),
         ];
     }

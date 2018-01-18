@@ -33,8 +33,6 @@ class ApiModelParamConverter implements ParamConverterInterface
             $request->attributes->set($configuration->getName(), $locator->get($version));
         } catch (ServiceNotFoundException $exception) {
             throw new NotFoundHttpException($configuration->getClass().' object not found for version '.$version.'.');
-        } catch (\Throwable $exception) {
-            return false;
         }
 
         return true;

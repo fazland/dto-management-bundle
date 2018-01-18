@@ -86,24 +86,7 @@ class DtoManagementExtension extends Extension
         $modelsByInterface = [];
 
         foreach ($this->getInterfaces($namespace) as $interface => $unused) {
-            $container->getReflectionClass($interface);
-            $models = [];
-
-            $finder = new ComposerFinder();
-            $finder->inNamespace($namespace)
-                ->implementationOf($interface);
-
-            foreach ($finder as $class => $reflector) {
-                $container->getReflectionClass($class);
-
-                if (! preg_match('/^'.str_replace('\\', '\\\\', $namespace).'\\\\v\d+\\\\v(\d{8})\\\\/', $class, $m)) {
-                    continue;
-                }
-
-                $models[$m[1]] = new Reference($reflector->getName());
-            }
-
-            $modelsByInterface[$interface] = $models;
+            $modelsByInterface[$interface] = $this->processInterface($container, $interface, $namespace);
         }
 
         $locators = [];
@@ -132,5 +115,27 @@ class DtoManagementExtension extends Extension
             });
 
         yield from $finder;
+    }
+
+    private function processInterface(ContainerBuilder $container, string $interface, string $namespace): array
+    {
+        $container->getReflectionClass($interface);
+
+        $models = [];
+        $finder = new ComposerFinder();
+        $finder->inNamespace($namespace)
+            ->implementationOf($interface);
+
+        foreach ($finder as $class => $reflector) {
+            $container->getReflectionClass($class);
+
+            if (! preg_match('/^'.str_replace('\\', '\\\\', $namespace).'\\\\v\d+\\\\v(\d{8})\\\\/', $class, $m)) {
+                continue;
+            }
+
+            $models[$m[1]] = new Reference($reflector->getName());
+        }
+
+        return $models;
     }
 }

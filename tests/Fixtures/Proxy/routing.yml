@@ -1,0 +1,7 @@
+index:
+    path: /
+    defaults: { _controller: 'AppBundle:Test:index' }
+
+protected:
+    path: /protected
+    defaults: { _controller: 'AppBundle:Test:protected' }

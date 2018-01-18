@@ -60,23 +60,6 @@ class ApiModelParamConverterTest extends WebTestCase
         $this->assertFalse($this->converter->apply($request->reveal(), $converter));
     }
 
-    public function testApplyShouldReturnFalseOnError(): void
-    {
-        $request = $this->prophesize(Request::class);
-
-        $converter = new ParamConverter([
-            'name' => 'user',
-            'class' => UserInterface::class,
-        ]);
-
-        $request->attributes = new ParameterBag(['_version' => '20171128']);
-        $this->serviceLocatorRegistry->get(UserInterface::class)
-            ->willReturn($locator = $this->prophesize(ServiceLocator::class));
-        $locator->get('20171128')->willThrow(new ServiceCircularReferenceException('20171128', []));
-
-        $this->assertFalse($this->converter->apply($request->reveal(), $converter));
-    }
-
     public function testSupportsShouldReturnTrueIfModelIsPresentInRegistry(): void
     {
         $converter = new ParamConverter([

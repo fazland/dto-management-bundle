@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DependencyInjection;
+namespace Fazland\DtoManagementBundle;
 
 use Fazland\DtoManagementBundle\Tests\Fixtures\DependencyInjection\AppKernel;
 use PHPUnit\Framework\TestCase;
