@@ -3,6 +3,7 @@
 namespace Fazland\DtoManagementBundle\DependencyInjection\Compiler;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Fazland\DtoManagementBundle\Annotation\Security;
 use Fazland\DtoManagementBundle\Annotation\Transform;
 use Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry;
@@ -40,6 +41,8 @@ class AddInterceptorsPass implements CompilerPassInterface
         $configuration->setGeneratorStrategy(new FileWriterGeneratorStrategy(new FileLocator($cacheDir)));
 
         $this->proxyFactory = new AccessInterceptorValueHolderFactory($configuration);
+        AnnotationRegistry::registerUniqueLoader('class_exists');
+
         $this->annotationReader = new AnnotationReader();
 
         $definition = $container->findDefinition(ServiceLocatorRegistry::class);
