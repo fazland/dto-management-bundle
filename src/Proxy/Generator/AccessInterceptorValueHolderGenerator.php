@@ -64,6 +64,10 @@ class AccessInterceptorValueHolderGenerator implements ProxyGeneratorInterface
 
         foreach (ProxiedMethodsFilter::getProxiedMethods($originalClass) as $proxiedMethod) {
             $interceptors = $this->generateInterceptors($proxiedMethod, $options['method_interceptors'][$proxiedMethod->getName()] ?? [], $locatorHolder);
+            if (0 === count($interceptors)) {
+                continue;
+            }
+
             ClassGeneratorUtils::addMethodIfNotFinal($originalClass, $classGenerator, $this->generateInterceptedMethod($proxiedMethod, $valueHolder, $interceptors));
         }
 
@@ -137,12 +141,15 @@ PHP;
         }
 
         $forwardedParams = implode(', ', $forwardedParams);
-        $interceptors = implode(";\n", $interceptors);
-        $body = <<<PHP
-$interceptors;
+        $interceptors = implode(";\n", $interceptors) . ';';
+        $return = 'return ';
 
-return \$this->{$valueHolder->getName()}->{$originalMethod->getName()}($forwardedParams);
-PHP;
+        $returnType = $originalMethod->getReturnType();
+        if (null !== $returnType && $returnType->getName() === 'void') {
+            $return = '';
+        }
+
+        $body = "$interceptors\n$return\$this->{$valueHolder->getName()}->{$originalMethod->getName()}($forwardedParams);";
 
         $method->setDocBlock('{@inheritDoc}');
         $method->setBody($body);
