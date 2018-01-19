@@ -13,11 +13,10 @@ class User implements UserInterface
      * @Transform(TestTransform::class)
      * @Security("is_granted('ROLE_ADMIN')")
      */
-    public $foobar;
+    public $foobar = 'ciao';
 
     public function __construct()
     {
-        $this->foobar = '';
     }
 
     /**
@@ -27,5 +26,20 @@ class User implements UserInterface
     public function setFoo($value)
     {
         $this->foo = $value;
+    }
+
+    public function getFoo()
+    {
+        return 'test';
+    }
+
+    public function setBar()
+    {
+        $this->foobar = 'testtest';
+    }
+
+    public function fluent(): self
+    {
+        return $this;
     }
 }

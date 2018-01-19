@@ -2,14 +2,14 @@
 
 namespace Fazland\DtoManagementBundle\Proxy\Factory;
 
-use Fazland\DtoManagementBundle\Proxy\Generator\AccessInterceptorValueHolderGenerator;
+use Fazland\DtoManagementBundle\Proxy\Generator\AccessInterceptorGenerator;
 use ProxyManager\Factory\AbstractBaseFactory;
 use ProxyManager\ProxyGenerator\ProxyGeneratorInterface;
 
-class AccessInterceptorValueHolderFactory extends AbstractBaseFactory
+class AccessInterceptorFactory extends AbstractBaseFactory
 {
     /**
-     * @var AccessInterceptorValueHolderGenerator|null
+     * @var AccessInterceptorGenerator|null
      */
     private $generator;
 
@@ -26,6 +26,6 @@ class AccessInterceptorValueHolderFactory extends AbstractBaseFactory
      */
     protected function getGenerator() : ProxyGeneratorInterface
     {
-        return $this->generator ?: $this->generator = new AccessInterceptorValueHolderGenerator();
+        return $this->generator ?: $this->generator = new AccessInterceptorGenerator();
     }
 }

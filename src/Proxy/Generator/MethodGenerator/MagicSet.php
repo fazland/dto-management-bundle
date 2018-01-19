@@ -3,18 +3,18 @@
 namespace Fazland\DtoManagementBundle\Proxy\Generator\MethodGenerator;
 
 use ProxyManager\Generator\MagicMethodGenerator;
-use ProxyManager\ProxyGenerator\LazyLoadingValueHolder\PropertyGenerator\ValueHolderProperty;
 use ProxyManager\ProxyGenerator\PropertyGenerator\PublicPropertiesMap;
 use ProxyManager\ProxyGenerator\Util\GetMethodIfExists;
 use ProxyManager\ProxyGenerator\Util\PublicScopeSimulator;
 use ReflectionClass;
 use Zend\Code\Generator\ParameterGenerator;
+use Zend\Code\Generator\PropertyGenerator;
 
 class MagicSet extends MagicMethodGenerator
 {
     public function __construct(
         ReflectionClass $originalClass,
-        ValueHolderProperty $valueHolder,
+        PropertyGenerator $valueHolder,
         PublicPropertiesMap $publicProperties,
         array $propertyInterceptors
     ) {
@@ -33,7 +33,7 @@ class MagicSet extends MagicMethodGenerator
             PublicScopeSimulator::OPERATION_SET,
             'name',
             'value',
-            $valueHolder,
+            null,
             'returnValue'
         );
 

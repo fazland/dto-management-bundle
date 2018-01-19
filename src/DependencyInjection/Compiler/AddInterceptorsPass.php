@@ -7,7 +7,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Fazland\DtoManagementBundle\Annotation\Security;
 use Fazland\DtoManagementBundle\Annotation\Transform;
 use Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry;
-use Fazland\DtoManagementBundle\Proxy\Factory\AccessInterceptorValueHolderFactory;
+use Fazland\DtoManagementBundle\Proxy\Factory\AccessInterceptorFactory;
 use Kcs\ClassFinder\Finder\RecursiveFinder;
 use ProxyManager\Configuration;
 use ProxyManager\FileLocator\FileLocator;
@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class AddInterceptorsPass implements CompilerPassInterface
 {
     /**
-     * @var \Fazland\DtoManagementBundle\Proxy\Factory\AccessInterceptorValueHolderFactory
+     * @var \Fazland\DtoManagementBundle\Proxy\Factory\AccessInterceptorFactory
      */
     private $proxyFactory;
 
@@ -40,7 +40,7 @@ class AddInterceptorsPass implements CompilerPassInterface
         $configuration->setProxiesTargetDir($cacheDir);
         $configuration->setGeneratorStrategy(new FileWriterGeneratorStrategy(new FileLocator($cacheDir)));
 
-        $this->proxyFactory = new AccessInterceptorValueHolderFactory($configuration);
+        $this->proxyFactory = new AccessInterceptorFactory($configuration);
         AnnotationRegistry::registerUniqueLoader('class_exists');
 
         $this->annotationReader = new AnnotationReader();

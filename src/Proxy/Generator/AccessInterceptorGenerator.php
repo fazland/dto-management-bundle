@@ -6,9 +6,7 @@ use Fazland\DtoManagementBundle\Annotation\Security;
 use Fazland\DtoManagementBundle\Annotation\Transform;
 use Fazland\DtoManagementBundle\Proxy\ExpressionLanguage;
 use Fazland\DtoManagementBundle\Proxy\Generator\PropertyGenerator\ServiceLocatorHolder;
-use Fazland\DtoManagementBundle\Proxy\Generator\PropertyGenerator\ServiceLocatorHolderSetter;
 use Fazland\DtoManagementBundle\Proxy\ProxyInterface;
-use ProxyManager\Generator\Util\ClassGeneratorUtils;
 use ProxyManager\Generator\Util\UniqueIdentifierGenerator;
 use ProxyManager\ProxyGenerator\Assertion\CanProxyAssertion;
 use ProxyManager\ProxyGenerator\LazyLoadingValueHolder\PropertyGenerator\ValueHolderProperty;
@@ -16,14 +14,12 @@ use ProxyManager\ProxyGenerator\PropertyGenerator\PublicPropertiesMap;
 use ProxyManager\ProxyGenerator\ProxyGeneratorInterface;
 use ProxyManager\ProxyGenerator\Util\Properties;
 use ProxyManager\ProxyGenerator\Util\ProxiedMethodsFilter;
-use ProxyManager\ProxyGenerator\ValueHolder\MethodGenerator\Constructor;
-use ProxyManager\ProxyGenerator\ValueHolder\MethodGenerator\GetWrappedValueHolderValue;
 use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Reflection\MethodReflection;
 use Zend\Code\Generator\MethodGenerator as ZendMethodGenerator;
 
-class AccessInterceptorValueHolderGenerator implements ProxyGeneratorInterface
+class AccessInterceptorGenerator implements ProxyGeneratorInterface
 {
     /**
      * @var ExpressionLanguage
@@ -53,22 +49,24 @@ class AccessInterceptorValueHolderGenerator implements ProxyGeneratorInterface
 
         $classGenerator->setImplementedInterfaces($interfaces);
         $classGenerator->addPropertyFromGenerator($valueHolder = new ValueHolderProperty());
-        $valueHolder->setDocBlock('@var \\'.$originalClass->getName().' The wrapped value');
+        $valueHolder->setDocBlock('@var \\'.$originalClass->getName().' Object containing the public properties');
+
         $classGenerator->addPropertyFromGenerator($publicProperties);
 
         $classGenerator->addPropertyFromGenerator($locatorHolder = new ServiceLocatorHolder());
-        $classGenerator->addMethodFromGenerator(new ServiceLocatorHolderSetter($locatorHolder));
-
-        $classGenerator->addMethodFromGenerator(Constructor::generateMethod($originalClass, $valueHolder));
-        $classGenerator->addMethodFromGenerator(new GetWrappedValueHolderValue($valueHolder));
+        $classGenerator->addMethodFromGenerator(MethodGenerator\Constructor::generateMethod($originalClass, $valueHolder, $locatorHolder));
 
         foreach (ProxiedMethodsFilter::getProxiedMethods($originalClass) as $proxiedMethod) {
+            if ($proxiedMethod->isFinal()) {
+                throw new \InvalidArgumentException('Method "'.$proxiedMethod->getName().'" is marked as final and cannot be proxied.');
+            }
+
             $interceptors = $this->generateInterceptors($proxiedMethod, $options['method_interceptors'][$proxiedMethod->getName()] ?? [], $locatorHolder);
             if (0 === count($interceptors)) {
                 continue;
             }
 
-            ClassGeneratorUtils::addMethodIfNotFinal($originalClass, $classGenerator, $this->generateInterceptedMethod($proxiedMethod, $valueHolder, $interceptors));
+            $classGenerator->addMethodFromGenerator($this->generateInterceptedMethod($proxiedMethod, $interceptors));
         }
 
         $propertyInterceptors = $options['property_interceptors'];
@@ -131,7 +129,7 @@ PHP;
         }, $interceptors);
     }
 
-    private function generateInterceptedMethod(\ReflectionMethod $originalMethod, ValueHolderProperty $valueHolder, array $interceptors): ZendMethodGenerator
+    private function generateInterceptedMethod(\ReflectionMethod $originalMethod, array $interceptors): ZendMethodGenerator
     {
         $method = ZendMethodGenerator::fromReflection(new MethodReflection($originalMethod->getDeclaringClass()->getName(), $originalMethod->getName()));
         $forwardedParams = [];
@@ -149,7 +147,7 @@ PHP;
             $return = '';
         }
 
-        $body = "$interceptors\n$return\$this->{$valueHolder->getName()}->{$originalMethod->getName()}($forwardedParams);";
+        $body = "$interceptors\n{$return}parent::{$originalMethod->getName()}($forwardedParams);";
 
         $method->setDocBlock('{@inheritDoc}');
         $method->setBody($body);
