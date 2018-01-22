@@ -36,7 +36,7 @@ class Constructor extends MethodGenerator
         $constructor->setBody(
             '$this->' . $valueHolder->getName() . ' = new \stdClass();' . "\n"
             . '$this->'.$locator->getName().' = $'.$locator->getName().';'."\n"
-            . UnsetPropertiesGenerator::generateSnippet(Properties::fromReflectionClass($originalClass), 'this')
+            . self::generateUnsetAccessiblePropertiesCode(Properties::fromReflectionClass($originalClass))
             . self::generateOriginalConstructorCall($originalClass, $valueHolder)
         );
 
@@ -91,5 +91,30 @@ class Constructor extends MethodGenerator
         );
 
         return reset($constructors) ?: null;
+    }
+
+    private static function generateUnsetAccessiblePropertiesCode(Properties $properties) : string
+    {
+        $accessibleProperties = $properties->getPublicProperties();
+        if (! $accessibleProperties) {
+            return '';
+        }
+
+        return  self::generateUnsetStatement($accessibleProperties) . "\n\n";
+    }
+
+    private static function generateUnsetStatement(array $properties) : string
+    {
+        return 'unset('
+            . implode(
+                ', ',
+                array_map(
+                    function (\ReflectionProperty $property) : string {
+                        return '$this->' . $property->getName();
+                    },
+                    $properties
+                )
+            )
+            . ');';
     }
 }
