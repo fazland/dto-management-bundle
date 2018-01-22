@@ -22,6 +22,14 @@ class AccessInterceptorFactory extends AbstractBaseFactory
     }
 
     /**
+     * @param AccessInterceptorGenerator $generator
+     */
+    public function setGenerator(AccessInterceptorGenerator $generator): void
+    {
+        $this->generator = $generator;
+    }
+
+    /**
      * {@inheritDoc}
      */
     protected function getGenerator() : ProxyGeneratorInterface

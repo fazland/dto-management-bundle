@@ -2,7 +2,6 @@
 
 namespace Fazland\DtoManagementBundle\Proxy;
 
-use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage as BaseExpressionLanguage;
 

@@ -33,14 +33,12 @@ class AddInterceptorsPass implements CompilerPassInterface
 
     public function process(ContainerBuilder $container)
     {
-        $cacheDir = $container->getParameter('kernel.cache_dir').'/dto-proxies';
+        $cacheDir = $container->getParameterBag()->resolveValue(
+            $container->getParameter('fazland.dto-management.proxy_cache_dir')
+        );
+        @mkdir($cacheDir, 0777, true);
 
-        @mkdir($cacheDir);
-        $configuration = new Configuration();
-        $configuration->setProxiesTargetDir($cacheDir);
-        $configuration->setGeneratorStrategy(new FileWriterGeneratorStrategy(new FileLocator($cacheDir)));
-
-        $this->proxyFactory = new AccessInterceptorFactory($configuration);
+        $this->proxyFactory = $container->get('fazland.dto-management.proxy_factory');
         AnnotationRegistry::registerUniqueLoader('class_exists');
 
         $this->annotationReader = new AnnotationReader();

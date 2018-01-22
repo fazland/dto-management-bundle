@@ -14,6 +14,7 @@ use ProxyManager\ProxyGenerator\PropertyGenerator\PublicPropertiesMap;
 use ProxyManager\ProxyGenerator\ProxyGeneratorInterface;
 use ProxyManager\ProxyGenerator\Util\Properties;
 use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage as BaseExpressionLanguage;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Reflection\MethodReflection;
 use Zend\Code\Generator\MethodGenerator as ZendMethodGenerator;
@@ -23,11 +24,11 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
     /**
      * @var ExpressionLanguage
      */
-    private $expressionLanguage;
+    protected $expressionLanguage;
 
-    public function __construct()
+    public function __construct(BaseExpressionLanguage $expressionLanguage = null)
     {
-        $this->expressionLanguage = new ExpressionLanguage();
+        $this->expressionLanguage = null !== $expressionLanguage ? $expressionLanguage : new ExpressionLanguage();
     }
 
     /**
