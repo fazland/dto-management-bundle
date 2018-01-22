@@ -7,6 +7,9 @@ namespace Fazland\DtoManagementBundle\Annotation;
  */
 class Security
 {
+    const ACCESS_DENIED_EXCEPTION = 'access_denied';
+    const RETURN_NULL = 'null';
+
     /**
      * @var string
      *
@@ -18,4 +21,11 @@ class Security
      * @var string
      */
     public $message;
+
+    /**
+     * @var string
+     *
+     * @Enum({"access_denied", "null"})
+     */
+    public $onInvalid = self::ACCESS_DENIED_EXCEPTION;
 }

@@ -5,3 +5,7 @@ index:
 protected:
     path: /protected
     defaults: { _controller: 'AppBundle:Test:protected' }
+
+unavailable:
+    path: /unavailable
+    defaults: { _controller: 'AppBundle:Test:unavailable' }

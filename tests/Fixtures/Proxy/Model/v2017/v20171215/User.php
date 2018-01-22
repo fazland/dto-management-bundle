@@ -42,4 +42,12 @@ class User implements UserInterface
     {
         return $this;
     }
+
+    /**
+     * @Security("is_granted('ROLE_DENY')", onInvalid="null")
+     */
+    public function getTest(): ?string
+    {
+        return 'unavailable_test';
+    }
 }

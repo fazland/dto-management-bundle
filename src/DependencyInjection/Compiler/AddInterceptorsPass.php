@@ -139,7 +139,12 @@ class AddInterceptorsPass implements CompilerPassInterface
                 ]);
 
                 $definition->setClass($proxyClass);
-                $definition->addTag('container.service_subscriber');
+                foreach ($subscribedServices as $id => $type) {
+                    $definition->addTag('container.service_subscriber', [
+                        'key' => $id,
+                        'id' => $id,
+                    ]);
+                }
             }
         }
     }

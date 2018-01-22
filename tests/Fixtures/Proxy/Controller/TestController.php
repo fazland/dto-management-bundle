@@ -22,4 +22,9 @@ class TestController extends Controller
 
         return new Response($this->getDump($user->foobar));
     }
+
+    public function unavailableAction(UserInterface $user): Response
+    {
+        return new Response($this->getDump($user->getTest()));
+    }
 }

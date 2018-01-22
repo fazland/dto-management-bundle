@@ -46,18 +46,31 @@ class ProxyTest extends WebTestCase
         $this->assertEquals('"CIAO"', $response->getContent());
     }
 
+    public function testShouldReturnNullIfOnInvalidFlagsIsSet()
+    {
+        $client = $this->createClient();
+        $client->request('GET', '/unavailable', [], [], [
+            'PHP_AUTH_USER' => 'admin',
+            'PHP_AUTH_PW' => 'admin',
+        ]);
+
+        $response = $client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('null', $response->getContent());
+    }
+
     protected static function createKernel(array $options = array())
     {
         return new AppKernel('test', true);
     }
-//
-//    /**
-//     * {@inheritdoc}
-//     */
-//    public function tearDown(): void
-//    {
-//        $fs = new Filesystem();
-//        $fs->remove(__DIR__.'/Fixtures/Proxy/cache');
-//        $fs->remove(__DIR__.'/Fixtures/Proxy/logs');
-//    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function tearDown(): void
+    {
+        $fs = new Filesystem();
+        $fs->remove(__DIR__.'/Fixtures/Proxy/cache');
+        $fs->remove(__DIR__.'/Fixtures/Proxy/logs');
+    }
 }

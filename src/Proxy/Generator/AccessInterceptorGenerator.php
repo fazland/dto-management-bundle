@@ -100,12 +100,22 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
                     $forwardedParams[] = 'value';
                 }
 
-                $usedParams = implode(', ', array_map(function (string $name) {
-                    return '$'.$name;
-                }, $forwardedParams));
+                if (count($forwardedParams) > 0) {
+                    $usedParams = ' use ('.implode(', ', array_map(function (string $name) {
+                        return '$' . $name;
+                    }, $forwardedParams)).')';
+                } else {
+                    $usedParams = '';
+                }
+
+                if ($annotation->onInvalid === Security::RETURN_NULL) {
+                    $onInvalid = 'return null;';
+                } else {
+                    $onInvalid = "throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException($message);";
+                }
 
                 return <<<PHP
-\${$property} = function () use ($usedParams): bool {
+\${$property} = function ()$usedParams: bool {
     \$auth_checker = \$this->{$locatorHolder->getName()}->get('security.authorization_checker');
     \$token = \$this->{$locatorHolder->getName()}->get('security.token_storage')->getToken();
     \$object = \$this;
@@ -115,7 +125,7 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
 };
 
 if (! \$$property()) {
-    throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException($message);
+    $onInvalid
 }
 PHP;
 
