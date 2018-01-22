@@ -29,7 +29,7 @@ class MagicIsset extends MagicMethodGenerator
                 PublicScopeSimulator::OPERATION_ISSET,
                 'name',
                 null,
-                null,
+                $valueHolder,
                 'returnValue'
             );
         }

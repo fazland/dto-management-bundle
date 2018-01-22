@@ -33,7 +33,7 @@ class MagicSet extends MagicMethodGenerator
             PublicScopeSimulator::OPERATION_SET,
             'name',
             'value',
-            null,
+            $valueHolder,
             'returnValue'
         );
 
