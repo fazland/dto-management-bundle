@@ -13,7 +13,6 @@ use ProxyManager\ProxyGenerator\LazyLoadingValueHolder\PropertyGenerator\ValueHo
 use ProxyManager\ProxyGenerator\PropertyGenerator\PublicPropertiesMap;
 use ProxyManager\ProxyGenerator\ProxyGeneratorInterface;
 use ProxyManager\ProxyGenerator\Util\Properties;
-use ProxyManager\ProxyGenerator\Util\ProxiedMethodsFilter;
 use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Reflection\MethodReflection;
@@ -57,13 +56,13 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
         $classGenerator->addMethodFromGenerator(MethodGenerator\Constructor::generateMethod($originalClass, $valueHolder, $locatorHolder));
 
         foreach (ProxiedMethodsFilter::getProxiedMethods($originalClass) as $proxiedMethod) {
-            if ($proxiedMethod->isFinal()) {
-                throw new \InvalidArgumentException('Method "'.$proxiedMethod->getName().'" is marked as final and cannot be proxied.');
-            }
-
             $interceptors = $this->generateInterceptors($proxiedMethod, $options['method_interceptors'][$proxiedMethod->getName()] ?? [], $locatorHolder);
             if (0 === count($interceptors)) {
                 continue;
+            }
+
+            if ($proxiedMethod->isFinal()) {
+                throw new \InvalidArgumentException('Method "'.$proxiedMethod->getName().'" is marked as final and cannot be proxied.');
             }
 
             $classGenerator->addMethodFromGenerator($this->generateInterceptedMethod($proxiedMethod, $interceptors));
