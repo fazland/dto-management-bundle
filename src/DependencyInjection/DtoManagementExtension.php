@@ -83,10 +83,18 @@ class DtoManagementExtension extends Extension
      */
     private function processNamespace(ContainerBuilder $container, string $namespace): array
     {
+        $finder = new ComposerFinder();
+        $finder->inNamespace($namespace);
+
+        $classes = iterator_to_array($finder);
+        $interfaces = array_filter($classes, function (\ReflectionClass $class) {
+            return $class->isInterface();
+        });
+
         $modelsByInterface = [];
 
-        foreach ($this->getInterfaces($namespace) as $interface => $unused) {
-            $modelsByInterface[$interface] = $this->processInterface($container, $interface, $namespace);
+        foreach ($interfaces as $interface => $unused) {
+            $modelsByInterface[$interface] = $this->processInterface($container, $interface, $namespace, $classes);
         }
 
         $locators = [];
@@ -99,36 +107,21 @@ class DtoManagementExtension extends Extension
         return $locators;
     }
 
-    /**
-     * Searches all the interfaces into the specified namespace.
-     *
-     * @param string $namespace
-     * @return \Generator|\ReflectionClass[]
-     */
-    private function getInterfaces(string $namespace): \Generator
-    {
-        $finder = new ComposerFinder();
-        $finder
-            ->inNamespace($namespace)
-            ->filter(function (\ReflectionClass $reflectionClass) {
-                return $reflectionClass->isInterface();
-            });
-
-        yield from $finder;
-    }
-
-    private function processInterface(ContainerBuilder $container, string $interface, string $namespace): array
+    private function processInterface(ContainerBuilder $container, string $interface, string $namespace, array $classes): array
     {
         $container->getReflectionClass($interface);
-
         $models = [];
-        $finder = new ComposerFinder();
-        $finder->inNamespace($namespace)
-            ->implementationOf($interface);
 
-        foreach ($finder as $class => $reflector) {
+        /**
+         * @var string $class
+         * @var \ReflectionClass $reflector
+         */
+        foreach ($classes as $class => $reflector) {
+            if (! $reflector->isInstantiable() || ! $reflector->isSubclassOf($interface)) {
+                continue;
+            }
+
             $container->getReflectionClass($class);
-
             if (! preg_match('/^'.str_replace('\\', '\\\\', $namespace).'\\\\v\d+\\\\v(\d{8})\\\\/', $class, $m)) {
                 continue;
             }
