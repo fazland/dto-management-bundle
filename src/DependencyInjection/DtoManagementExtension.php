@@ -7,6 +7,7 @@ use Fazland\DtoManagementBundle\Finder\ServiceLocator;
 use Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry;
 use Kcs\ClassFinder\Finder\ComposerFinder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Resource\ClassExistenceResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -109,7 +110,7 @@ class DtoManagementExtension extends Extension
 
     private function processInterface(ContainerBuilder $container, string $interface, string $namespace, array $classes): array
     {
-        $container->getReflectionClass($interface);
+        $container->addResource(new ClassExistenceResource($interface, true));
         $models = [];
 
         /**
@@ -121,7 +122,7 @@ class DtoManagementExtension extends Extension
                 continue;
             }
 
-            $container->getReflectionClass($class);
+            $container->addResource(new ClassExistenceResource($class, true));
             if (! preg_match('/^'.str_replace('\\', '\\\\', $namespace).'\\\\v\d+\\\\v(\d{8})\\\\/', $class, $m)) {
                 continue;
             }
