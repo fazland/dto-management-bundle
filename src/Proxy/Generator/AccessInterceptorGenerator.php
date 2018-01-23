@@ -145,14 +145,6 @@ PHP;
         $method = ZendMethodGenerator::fromReflection(new MethodReflection($originalMethod->getDeclaringClass()->getName(), $originalMethod->getName()));
         if (PHP_VERSION_ID >= 70200) {
             foreach ($method->getParameters() as $parameter) {
-                $type = (\Closure::bind(function () {
-                    return $this->type;
-                }, $parameter, ParameterGenerator::class)())->generate();
-
-                if ($type[0] === '?') {
-                    $parameter->setDefaultValue(null);
-                }
-
                 \Closure::bind(function () {
                     $this->type = null;
                 }, $parameter, ParameterGenerator::class)();
