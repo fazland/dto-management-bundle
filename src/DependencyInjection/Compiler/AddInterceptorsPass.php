@@ -41,7 +41,7 @@ class AddInterceptorsPass implements CompilerPassInterface
         $this->proxyFactory = $container->get('fazland.dto-management.proxy_factory');
         AnnotationRegistry::registerUniqueLoader('class_exists');
 
-        $this->annotationReader = new AnnotationReader();
+        $this->annotationReader = $container->get('annotations.reader');
 
         $definition = $container->findDefinition(ServiceLocatorRegistry::class);
         $interfaces = $definition->getArgument(0);
