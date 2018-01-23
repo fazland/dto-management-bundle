@@ -16,6 +16,7 @@ use ProxyManager\ProxyGenerator\Util\Properties;
 use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage as BaseExpressionLanguage;
 use Zend\Code\Generator\ClassGenerator;
+use Zend\Code\Generator\ParameterGenerator;
 use Zend\Code\Reflection\MethodReflection;
 use Zend\Code\Generator\MethodGenerator as ZendMethodGenerator;
 
@@ -142,6 +143,22 @@ PHP;
     private function generateInterceptedMethod(\ReflectionMethod $originalMethod, array $interceptors): ZendMethodGenerator
     {
         $method = ZendMethodGenerator::fromReflection(new MethodReflection($originalMethod->getDeclaringClass()->getName(), $originalMethod->getName()));
+        if (PHP_VERSION_ID >= 70200) {
+            foreach ($method->getParameters() as $parameter) {
+                $type = (\Closure::bind(function () {
+                    return $this->type;
+                }, $parameter, ParameterGenerator::class)())->generate();
+
+                if ($type[0] === '?') {
+                    $parameter->setDefaultValue(null);
+                }
+
+                \Closure::bind(function () {
+                    $this->type = null;
+                }, $parameter, ParameterGenerator::class)();
+            }
+        }
+
         $forwardedParams = [];
 
         foreach ($originalMethod->getParameters() as $parameter) {

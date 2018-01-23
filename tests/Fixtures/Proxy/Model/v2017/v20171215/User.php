@@ -23,7 +23,7 @@ class User implements UserInterface
      * @Transform(TestTransform::class)
      * @Security("value == 'ciao'")
      */
-    public function setFoo($value)
+    public function setFoo(?string $value)
     {
         $this->foo = $value;
     }
