@@ -19,31 +19,16 @@ final class DtoManagementBundle extends Bundle
 
     public function boot()
     {
-        $loader = self::getValidLoader();
         $cacheDir = $this->container->getParameter('kernel.cache_dir');
 
-        $loader->addClassMap(require $cacheDir.'/dto-proxies-map.php');
-    }
-
-    /**
-     * Try to get a registered instance of composer ClassLoader.
-     *
-     * @return ClassLoader
-     *
-     * @throws \RuntimeException if composer CLassLoader cannot be found
-     */
-    private static function getValidLoader(): ClassLoader
-    {
-        foreach (spl_autoload_functions() as $autoload_function) {
-            if (is_array($autoload_function) && $autoload_function[0] instanceof DebugClassLoader) {
-                $autoload_function = $autoload_function[0]->getClassLoader();
+        $classMap = require $cacheDir.'/dto-proxies-map.php';
+        spl_autoload_register(function (string $className) use (&$classMap): bool {
+            if (! isset($classMap[$className])) {
+                return false;
             }
 
-            if (is_array($autoload_function) && $autoload_function[0] instanceof ClassLoader) {
-                return $autoload_function[0];
-            }
-        }
-
-        throw new \RuntimeException('Cannot find a valid composer class loader in registered autoloader functions. Cannot continue.');
+            include $classMap[$className];
+            return true;
+        });
     }
 }
