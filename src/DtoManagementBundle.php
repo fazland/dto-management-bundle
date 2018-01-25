@@ -27,7 +27,7 @@ final class DtoManagementBundle extends Bundle
                 return false;
             }
 
-            include $classMap[$className];
+            require $classMap[$className];
             return true;
         });
     }

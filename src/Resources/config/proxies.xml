@@ -16,12 +16,9 @@
             </call>
             <call method="setGeneratorStrategy">
                 <argument type="service">
-                    <service class="ProxyManager\GeneratorStrategy\FileWriterGeneratorStrategy">
-                        <argument type="service">
-                            <service class="ProxyManager\FileLocator\FileLocator">
-                                <argument>%fazland.dto-management.proxy_cache_dir%</argument>
-                            </service>
-                        </argument>
+                    <service class="Fazland\DtoManagementBundle\Proxy\GeneratorStrategy\CacheWriterGeneratorStrategy">
+                        <argument type="service" id="fazland.dto-management.proxy_factory.configuration" />
+                        <argument>%kernel.debug%</argument>
                     </service>
                 </argument>
             </call>
