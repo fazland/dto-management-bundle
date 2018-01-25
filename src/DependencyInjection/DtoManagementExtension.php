@@ -2,7 +2,6 @@
 
 namespace Fazland\DtoManagementBundle\DependencyInjection;
 
-use Fazland\DtoManagementBundle\Finder\Finder;
 use Fazland\DtoManagementBundle\Finder\ServiceLocator;
 use Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry;
 use Kcs\ClassFinder\Finder\ComposerFinder;
@@ -114,10 +113,6 @@ class DtoManagementExtension extends Extension
         $container->addResource(new ClassExistenceResource($interface, true));
         $models = [];
 
-        /**
-         * @var string $class
-         * @var \ReflectionClass $reflector
-         */
         foreach ($classes as $class => $reflector) {
             if (! $reflector->isInstantiable() || ! $reflector->isSubclassOf($interface)) {
                 continue;

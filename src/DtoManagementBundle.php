@@ -2,10 +2,7 @@
 
 namespace Fazland\DtoManagementBundle;
 
-use Composer\Autoload\ClassLoader;
 use Fazland\DtoManagementBundle\DependencyInjection\Compiler\AddInterceptorsPass;
-use Symfony\Component\Debug\DebugClassLoader;
-use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -28,6 +25,7 @@ final class DtoManagementBundle extends Bundle
             }
 
             require $classMap[$className];
+
             return true;
         });
     }

@@ -3,7 +3,6 @@
 namespace Fazland\DtoManagementBundle;
 
 use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\AppKernel;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -59,7 +58,7 @@ class ProxyTest extends WebTestCase
         $this->assertEquals('null', $response->getContent());
     }
 
-    protected static function createKernel(array $options = array())
+    protected static function createKernel(array $options = [])
     {
         return new AppKernel('test', true);
     }

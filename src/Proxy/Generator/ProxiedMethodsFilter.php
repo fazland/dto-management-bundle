@@ -8,7 +8,7 @@ use ReflectionClass;
 use ReflectionMethod;
 
 /**
- * Utility class used to filter methods that can be proxied
+ * Utility class used to filter methods that can be proxied.
  *
  * @author Marco Pivetta <ocramius@gmail.com>
  * @license MIT
@@ -34,7 +34,7 @@ final class ProxiedMethodsFilter
      *
      * @return ReflectionMethod[]
      */
-    public static function getProxiedMethods(ReflectionClass $class, array $excluded = null) : array
+    public static function getProxiedMethods(ReflectionClass $class, array $excluded = null): array
     {
         return self::doFilter($class, (null === $excluded) ? self::$defaultExcluded : $excluded);
     }
@@ -45,7 +45,7 @@ final class ProxiedMethodsFilter
      *
      * @return ReflectionMethod[]
      */
-    private static function doFilter(ReflectionClass $class, array $excluded) : array
+    private static function doFilter(ReflectionClass $class, array $excluded): array
     {
         $ignored = array_flip(array_map('strtolower', $excluded));
 
@@ -58,13 +58,13 @@ final class ProxiedMethodsFilter
     }
 
     /**
-     * Checks whether the method cannot be proxied
+     * Checks whether the method cannot be proxied.
      *
      * @param ReflectionMethod $method
      *
      * @return bool
      */
-    private static function methodCannotBeProxied(ReflectionMethod $method) : bool
+    private static function methodCannotBeProxied(ReflectionMethod $method): bool
     {
         return $method->isConstructor() || $method->isPrivate() || $method->isStatic();
     }

@@ -14,9 +14,9 @@ class AccessInterceptorFactory extends AbstractBaseFactory
     private $generator;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function generateProxy(string $className, array $proxyOptions = []) : string
+    public function generateProxy(string $className, array $proxyOptions = []): string
     {
         return parent::generateProxy($className, $proxyOptions);
     }
@@ -30,9 +30,9 @@ class AccessInterceptorFactory extends AbstractBaseFactory
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    protected function getGenerator() : ProxyGeneratorInterface
+    protected function getGenerator(): ProxyGeneratorInterface
     {
         return $this->generator ?: $this->generator = new AccessInterceptorGenerator();
     }

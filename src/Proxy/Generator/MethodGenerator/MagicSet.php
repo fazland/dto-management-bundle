@@ -24,10 +24,10 @@ class MagicSet extends MagicMethodGenerator
             [new ParameterGenerator('name'), new ParameterGenerator('value')]
         );
 
-        $parent          = GetMethodIfExists::get($originalClass, '__set');
+        $parent = GetMethodIfExists::get($originalClass, '__set');
         $valueHolderName = $valueHolder->getName();
 
-        $this->setDocBlock(($parent ? "{@inheritDoc}\n" : '') . "@param string \$name\n@param mixed \$value\n\n@return mixed");
+        $this->setDocBlock(($parent ? "{@inheritDoc}\n" : '')."@param string \$name\n@param mixed \$value\n\n@return mixed");
 
         $callParent = PublicScopeSimulator::getPublicAccessSimulationCode(
             PublicScopeSimulator::OPERATION_SET,
@@ -38,9 +38,9 @@ class MagicSet extends MagicMethodGenerator
         );
 
         if (! $publicProperties->isEmpty()) {
-            $callParent = 'if (isset(self::$' . $publicProperties->getName() . "[\$name])) {\n"
-                . '    $returnValue = ($this->' . $valueHolderName . '->$name = $value);'
-                . "\n} else {\n    $callParent\n}\n\n";
+            $callParent = 'if (isset(self::$'.$publicProperties->getName()."[\$name])) {\n"
+                .'    $returnValue = ($this->'.$valueHolderName.'->$name = $value);'
+                ."\n} else {\n    $callParent\n}\n\n";
         }
 
         $body = "switch(\$name) {\n";

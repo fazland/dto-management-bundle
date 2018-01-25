@@ -23,10 +23,10 @@ class MagicGet extends MagicMethodGenerator
             [new ParameterGenerator('name')]
         );
 
-        $parent          = GetMethodIfExists::get($originalClass, '__get');
+        $parent = GetMethodIfExists::get($originalClass, '__get');
         $valueHolderName = $valueHolder->getName();
 
-        $this->setDocBlock(($parent ? "{@inheritDoc}\n" : '') . "@param string \$name\n");
+        $this->setDocBlock(($parent ? "{@inheritDoc}\n" : '')."@param string \$name\n");
 
         $callParent = PublicScopeSimulator::getPublicAccessSimulationCode(
             PublicScopeSimulator::OPERATION_GET,
@@ -37,9 +37,9 @@ class MagicGet extends MagicMethodGenerator
         );
 
         if (! $publicProperties->isEmpty()) {
-            $callParent = 'if (isset(self::$' . $publicProperties->getName() . "[\$name])) {\n"
-                . '    $returnValue = & $this->' . $valueHolderName . '->$name;'
-                . "\n} else {\n    $callParent\n}\n\n";
+            $callParent = 'if (isset(self::$'.$publicProperties->getName()."[\$name])) {\n"
+                .'    $returnValue = & $this->'.$valueHolderName.'->$name;'
+                ."\n} else {\n    $callParent\n}\n\n";
         }
 
         $body = $callParent."\n";

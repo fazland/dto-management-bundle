@@ -16,9 +16,9 @@ use ProxyManager\ProxyGenerator\Util\Properties;
 use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage as BaseExpressionLanguage;
 use Zend\Code\Generator\ClassGenerator;
+use Zend\Code\Generator\MethodGenerator as ZendMethodGenerator;
 use Zend\Code\Generator\ParameterGenerator;
 use Zend\Code\Reflection\MethodReflection;
-use Zend\Code\Generator\MethodGenerator as ZendMethodGenerator;
 
 class AccessInterceptorGenerator implements ProxyGeneratorInterface
 {
@@ -33,14 +33,14 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function generate(\ReflectionClass $originalClass, ClassGenerator $classGenerator, array $options = [])
     {
         CanProxyAssertion::assertClassCanBeProxied($originalClass);
 
         $publicProperties = new PublicPropertiesMap(Properties::fromReflectionClass($originalClass));
-        $interfaces       = [ProxyInterface::class, ServiceSubscriberInterface::class];
+        $interfaces = [ProxyInterface::class, ServiceSubscriberInterface::class];
 
         if ($originalClass->isInterface()) {
             $interfaces[] = $originalClass->getName();
@@ -86,6 +86,7 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
         switch (true) {
             case $annotation instanceof Transform:
                 $param = null === $originalMethod ? 'value' : $originalMethod->getParameters()[0]->getName();
+
                 return "\${$param} = \$this->{$locatorHolder->getName()}->get('$annotation->service')->reverseTransform(\${$param})";
 
             case $annotation instanceof Security:
@@ -103,13 +104,13 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
 
                 if (count($forwardedParams) > 0) {
                     $usedParams = ' use ('.implode(', ', array_map(function (string $name) {
-                        return '$' . $name;
+                        return '$'.$name;
                     }, $forwardedParams)).')';
                 } else {
                     $usedParams = '';
                 }
 
-                if ($annotation->onInvalid === Security::RETURN_NULL) {
+                if (Security::RETURN_NULL === $annotation->onInvalid) {
                     $onInvalid = 'return null;';
                 } else {
                     $onInvalid = "throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException($message);";
@@ -129,7 +130,6 @@ if (! \$$property()) {
     $onInvalid
 }
 PHP;
-
         }
     }
 
@@ -154,15 +154,15 @@ PHP;
         $forwardedParams = [];
 
         foreach ($originalMethod->getParameters() as $parameter) {
-            $forwardedParams[] = ($parameter->isVariadic() ? '...' : '') . '$' . $parameter->getName();
+            $forwardedParams[] = ($parameter->isVariadic() ? '...' : '').'$'.$parameter->getName();
         }
 
         $forwardedParams = implode(', ', $forwardedParams);
-        $interceptors = implode(";\n", $interceptors) . ';';
+        $interceptors = implode(";\n", $interceptors).';';
         $return = 'return ';
 
         $returnType = $originalMethod->getReturnType();
-        if (null !== $returnType && $returnType->getName() === 'void') {
+        if (null !== $returnType && 'void' === $returnType->getName()) {
             $return = '';
         }
 

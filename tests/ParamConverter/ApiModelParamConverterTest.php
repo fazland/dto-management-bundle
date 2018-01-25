@@ -12,7 +12,6 @@ use Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\Model\v2017\v20171
 use Prophecy\Prophecy\ObjectProphecy;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\ParameterBag;

@@ -34,11 +34,11 @@ class CacheWriterGeneratorStrategy implements GeneratorStrategyInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function generate(ClassGenerator $classGenerator): string
     {
-        $className = trim($classGenerator->getNamespaceName(), '\\') . '\\' . trim($classGenerator->getName(), '\\');
+        $className = trim($classGenerator->getNamespaceName(), '\\').'\\'.trim($classGenerator->getName(), '\\');
         $fileName = $this->configuration->getProxiesTargetDir().DIRECTORY_SEPARATOR.str_replace('\\', '', $className).'.php';
 
         $cacheFactory = new ConfigCacheFactory($this->debug);

@@ -7,11 +7,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Fazland\DtoManagementBundle\Annotation\Security;
 use Fazland\DtoManagementBundle\Annotation\Transform;
 use Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry;
-use Fazland\DtoManagementBundle\Proxy\Factory\AccessInterceptorFactory;
 use Kcs\ClassFinder\Finder\RecursiveFinder;
-use ProxyManager\Configuration;
-use ProxyManager\FileLocator\FileLocator;
-use ProxyManager\GeneratorStrategy\FileWriterGeneratorStrategy;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -74,7 +70,7 @@ class AddInterceptorsPass implements CompilerPassInterface
                 $annot = $this->annotationReader->getMethodAnnotation($method, Transform::class);
 
                 if (null !== $annot) {
-                    if (count($params) !== 1) {
+                    if (1 !== count($params)) {
                         throw new \LogicException('Transformations can be applied to methods with 1 parameter only. '.$method->getName().' has '.$method->getNumberOfParameters());
                     }
 
@@ -152,10 +148,6 @@ class AddInterceptorsPass implements CompilerPassInterface
         $map = [];
         $finder = new RecursiveFinder($cacheDir);
 
-        /**
-         * @var string $class
-         * @var \ReflectionClass $reflector
-         */
         foreach ($finder as $class => $reflector) {
             $map[$class] = $reflector->getFileName();
         }

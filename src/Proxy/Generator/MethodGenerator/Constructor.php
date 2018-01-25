@@ -4,7 +4,6 @@ namespace Fazland\DtoManagementBundle\Proxy\Generator\MethodGenerator;
 
 use ProxyManager\Generator\MethodGenerator;
 use ProxyManager\ProxyGenerator\Util\Properties;
-use ProxyManager\ProxyGenerator\Util\UnsetPropertiesGenerator;
 use Psr\Container\ContainerInterface;
 use Zend\Code\Generator\ParameterGenerator;
 use Zend\Code\Generator\PropertyGenerator;
@@ -13,16 +12,15 @@ use Zend\Code\Reflection\MethodReflection;
 class Constructor extends MethodGenerator
 {
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param \ReflectionClass $originalClass
+     * @param \ReflectionClass  $originalClass
      * @param PropertyGenerator $valueHolder
-     *
      * @param PropertyGenerator $locator
-     * @return self
      *
+     * @return self
      */
-    public static function generateMethod(\ReflectionClass $originalClass, PropertyGenerator $valueHolder, PropertyGenerator $locator) : self
+    public static function generateMethod(\ReflectionClass $originalClass, PropertyGenerator $valueHolder, PropertyGenerator $locator): self
     {
         $originalConstructor = self::getConstructor($originalClass);
 
@@ -34,16 +32,16 @@ class Constructor extends MethodGenerator
 
         $constructor->setDocBlock('{@inheritDoc}');
         $constructor->setBody(
-            '$this->' . $valueHolder->getName() . ' = new \stdClass();' . "\n"
-            . '$this->'.$locator->getName().' = $'.$locator->getName().';'."\n"
-            . self::generateUnsetAccessiblePropertiesCode(Properties::fromReflectionClass($originalClass))
-            . self::generateOriginalConstructorCall($originalClass, $valueHolder)
+            '$this->'.$valueHolder->getName().' = new \stdClass();'."\n"
+            .'$this->'.$locator->getName().' = $'.$locator->getName().';'."\n"
+            .self::generateUnsetAccessiblePropertiesCode(Properties::fromReflectionClass($originalClass))
+            .self::generateOriginalConstructorCall($originalClass, $valueHolder)
         );
 
         return $constructor;
     }
 
-    private static function generateOriginalConstructorCall(\ReflectionClass $class, PropertyGenerator $valueHolder) : string
+    private static function generateOriginalConstructorCall(\ReflectionClass $class, PropertyGenerator $valueHolder): string
     {
         $originalConstructor = self::getConstructor($class);
         if (null === $originalConstructor) {
@@ -53,17 +51,17 @@ class Constructor extends MethodGenerator
         $constructor = self::fromReflection($originalConstructor);
 
         return "\n\n"
-            . 'parent::' . $constructor->getName() . '('
-            . implode(
+            .'parent::'.$constructor->getName().'('
+            .implode(
                 ', ',
                 array_map(
-                    function (ParameterGenerator $parameter) : string {
-                        return ($parameter->getVariadic() ? '...' : '') . '$' . $parameter->getName();
+                    function (ParameterGenerator $parameter): string {
+                        return ($parameter->getVariadic() ? '...' : '').'$'.$parameter->getName();
                     },
                     $constructor->getParameters()
                 )
             )
-            . ');';
+            .');';
     }
 
     /**
@@ -76,7 +74,7 @@ class Constructor extends MethodGenerator
     private static function getConstructor(\ReflectionClass $class): ?MethodReflection
     {
         $constructors = array_map(
-            function (\ReflectionMethod $method) : MethodReflection {
+            function (\ReflectionMethod $method): MethodReflection {
                 return new MethodReflection(
                     $method->getDeclaringClass()->getName(),
                     $method->getName()
@@ -84,7 +82,7 @@ class Constructor extends MethodGenerator
             },
             array_filter(
                 $class->getMethods(),
-                function (\ReflectionMethod $method) : bool {
+                function (\ReflectionMethod $method): bool {
                     return $method->isConstructor();
                 }
             )
@@ -93,28 +91,28 @@ class Constructor extends MethodGenerator
         return reset($constructors) ?: null;
     }
 
-    private static function generateUnsetAccessiblePropertiesCode(Properties $properties) : string
+    private static function generateUnsetAccessiblePropertiesCode(Properties $properties): string
     {
         $accessibleProperties = $properties->getPublicProperties();
         if (! $accessibleProperties) {
             return '';
         }
 
-        return  self::generateUnsetStatement($accessibleProperties) . "\n\n";
+        return  self::generateUnsetStatement($accessibleProperties)."\n\n";
     }
 
-    private static function generateUnsetStatement(array $properties) : string
+    private static function generateUnsetStatement(array $properties): string
     {
         return 'unset('
-            . implode(
+            .implode(
                 ', ',
                 array_map(
-                    function (\ReflectionProperty $property) : string {
-                        return '$this->' . $property->getName();
+                    function (\ReflectionProperty $property): string {
+                        return '$this->'.$property->getName();
                     },
                     $properties
                 )
             )
-            . ');';
+            .');';
     }
 }
