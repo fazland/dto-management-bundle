@@ -2,8 +2,8 @@
 
 namespace Fazland\DtoManagementBundle\Tests\ParamConverter;
 
-use Fazland\DtoManagementBundle\Finder\ServiceLocator;
 use Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry;
+use Fazland\DtoManagementBundle\InterfaceResolver\ResolverInterface;
 use Fazland\DtoManagementBundle\ParamConverter\ApiModelParamConverter;
 use Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\AppKernel;
 use Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\Model\Interfaces\UserInterface;
@@ -26,6 +26,11 @@ class ApiModelParamConverterTest extends WebTestCase
     private $serviceLocatorRegistry;
 
     /**
+     * @var ResolverInterface|ObjectProphecy
+     */
+    private $resolver;
+
+    /**
      * @var ApiModelParamConverter
      */
     private $converter;
@@ -35,8 +40,9 @@ class ApiModelParamConverterTest extends WebTestCase
      */
     protected function setUp(): void
     {
+        $this->resolver = $this->prophesize(ResolverInterface::class);
         $this->serviceLocatorRegistry = $this->prophesize(ServiceLocatorRegistry::class);
-        $this->converter = new ApiModelParamConverter($this->serviceLocatorRegistry->reveal());
+        $this->converter = new ApiModelParamConverter($this->resolver->reveal());
     }
 
     /**
@@ -52,10 +58,9 @@ class ApiModelParamConverterTest extends WebTestCase
         ]);
 
         $request->attributes = new ParameterBag(['_version' => '20171128']);
-        $this->serviceLocatorRegistry->get(UserInterface::class)
-            ->willReturn($locator = $this->prophesize(ServiceLocator::class));
-        $locator->get('20171128')->willThrow(new ServiceNotFoundException('20171128'));
 
+        $this->resolver->resolve(UserInterface::class, $request->reveal())
+            ->willThrow(new ServiceNotFoundException('20171128'));
         $this->assertFalse($this->converter->apply($request->reveal(), $converter));
     }
 
@@ -66,7 +71,7 @@ class ApiModelParamConverterTest extends WebTestCase
             'class' => UserInterface::class,
         ]);
 
-        $this->serviceLocatorRegistry->has(UserInterface::class)->willReturn(true);
+        $this->resolver->has(UserInterface::class)->willReturn(true);
         $this->assertTrue($this->converter->supports($converter));
     }
 
@@ -77,7 +82,7 @@ class ApiModelParamConverterTest extends WebTestCase
             'class' => UserInterface::class,
         ]);
 
-        $this->serviceLocatorRegistry->has(UserInterface::class)->willReturn(false);
+        $this->resolver->has(UserInterface::class)->willReturn(false);
         $this->assertFalse($this->converter->supports($converter));
     }
 

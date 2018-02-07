@@ -2,7 +2,7 @@
 
 namespace Fazland\DtoManagementBundle\ParamConverter;
 
-use Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry;
+use Fazland\DtoManagementBundle\InterfaceResolver\ResolverInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -12,13 +12,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ApiModelParamConverter implements ParamConverterInterface
 {
     /**
-     * @var ServiceLocatorRegistry
+     * @var ResolverInterface
      */
-    private $registry;
+    private $resolver;
 
-    public function __construct(ServiceLocatorRegistry $registry)
+    public function __construct(ResolverInterface $resolver)
     {
-        $this->registry = $registry;
+        $this->resolver = $resolver;
     }
 
     /**
@@ -26,14 +26,13 @@ class ApiModelParamConverter implements ParamConverterInterface
      */
     public function apply(Request $request, ParamConverter $configuration): bool
     {
-        $version = $request->attributes->get('_version', date_create()->format('Ymd'));
-        $locator = $this->registry->get($configuration->getClass());
-
         try {
-            $request->attributes->set($configuration->getName(), $locator->get($version));
+            $service = $this->resolver->resolve($configuration->getClass(), $request);
         } catch (ServiceNotFoundException $exception) {
-            throw new NotFoundHttpException($configuration->getClass().' object not found for version '.$version.'.');
+            throw new NotFoundHttpException($configuration->getClass().' object not found for version '.$exception->getId().'.');
         }
+
+        $request->attributes->set($configuration->getName(), $service);
 
         return true;
     }
@@ -45,6 +44,6 @@ class ApiModelParamConverter implements ParamConverterInterface
     {
         $class = $configuration->getClass();
 
-        return null !== $class && $this->registry->has($class);
+        return null !== $class && $this->resolver->has($class);
     }
 }

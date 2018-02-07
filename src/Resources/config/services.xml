@@ -2,7 +2,6 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
     <services>
         <defaults public="false" />
 
@@ -10,8 +9,18 @@
             <argument type="collection" />
         </service>
 
-        <service id="Fazland\DtoManagementBundle\ParamConverter\ApiModelParamConverter">
+        <service id="Fazland\DtoManagementBundle\InterfaceResolver\ResolverInterface"
+                 alias="Fazland\DtoManagementBundle\InterfaceResolver\Resolver"
+                 public="true"
+        />
+
+        <service id="Fazland\DtoManagementBundle\InterfaceResolver\Resolver">
             <argument type="service" id="Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry" />
+            <argument type="service" id="request_stack" on-invalid="null" />
+        </service>
+
+        <service id="Fazland\DtoManagementBundle\ParamConverter\ApiModelParamConverter">
+            <argument type="service" id="Fazland\DtoManagementBundle\InterfaceResolver\Resolver" />
             <tag name="request.param_converter" />
         </service>
     </services>
