@@ -13,7 +13,10 @@ class GetSubscribedServices extends MethodGenerator
         $this->setStatic(true);
 
         $parent = GetMethodIfExists::get($originalClass, 'getSubscribedServices');
-        $this->setDocBlock("{@inheritDoc}\n");
+        $this
+            ->setReturnType('array')
+            ->setDocBlock("{@inheritDoc}\n")
+        ;
 
         $callParent = null !== $parent ? "\$parentServices = parent::getSubscribedServices();\n" : "\$parentServices = [];\n";
         $subscribedServices = var_export($subscribedServices, true);
