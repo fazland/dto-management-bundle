@@ -7,7 +7,10 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage as BaseExpressionLan
 
 class ExpressionLanguage extends BaseExpressionLanguage
 {
-    protected function registerFunctions()
+    /**
+     * {@inheritdoc}
+     */
+    protected function registerFunctions(): void
     {
         $this->addFunction(ExpressionFunction::fromPhp('constant'));
 

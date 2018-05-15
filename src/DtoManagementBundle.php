@@ -3,22 +3,31 @@
 namespace Fazland\DtoManagementBundle;
 
 use Fazland\DtoManagementBundle\DependencyInjection\Compiler\AddInterceptorsPass;
+use Fazland\DtoManagementBundle\DependencyInjection\Compiler\DtoProxySerializerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 final class DtoManagementBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container): void
     {
         $container
-            ->addCompilerPass(new AddInterceptorsPass());
+            ->addCompilerPass(new AddInterceptorsPass())
+            ->addCompilerPass(new DtoProxySerializerPass())
+        ;
     }
 
-    public function boot()
+    /**
+     * {@inheritdoc}
+     */
+    public function boot(): void
     {
         $cacheDir = $this->container->getParameter('kernel.cache_dir');
 
-        $classMap = require $cacheDir.'/dto-proxies-map.php';
+        $classMap = require "$cacheDir/dto-proxies-map.php";
         spl_autoload_register(function (string $className) use (&$classMap): bool {
             if (! isset($classMap[$className])) {
                 return false;

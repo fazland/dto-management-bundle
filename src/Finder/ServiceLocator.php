@@ -22,7 +22,7 @@ class ServiceLocator implements ContainerInterface
     /**
      * {@inheritdoc}
      */
-    public function has($id)
+    public function has($id): bool
     {
         return $id >= array_keys($this->factories)[0];
     }

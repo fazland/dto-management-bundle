@@ -35,7 +35,7 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate(\ReflectionClass $originalClass, ClassGenerator $classGenerator, array $options = [])
+    public function generate(\ReflectionClass $originalClass, ClassGenerator $classGenerator, array $options = []): void
     {
         CanProxyAssertion::assertClassCanBeProxied($originalClass);
 

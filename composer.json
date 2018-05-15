@@ -20,6 +20,7 @@
         "symfony/security": "^4.0"
     },
     "require-dev": {
+        "kcs/serializer": "2.x-dev",
         "php-mock/php-mock": "^1.0",
         "php-mock/php-mock-prophecy": "^0.0.2",
         "phpunit/phpunit": "^6.5",
