@@ -18,9 +18,6 @@ class DtoProxySerializerPass implements CompilerPassInterface
             return;
         }
 
-        $definition = $container->getDefinition(DtoProxySubscriber::class);
-        $definition->clearTag('kernel.event_subscriber');
-
-        $container->setDefinition(DtoProxySubscriber::class, $definition);
+        $container->removeDefinition(DtoProxySubscriber::class);
     }
 }

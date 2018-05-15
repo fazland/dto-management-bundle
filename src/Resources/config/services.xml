@@ -23,5 +23,9 @@
             <argument type="service" id="Fazland\DtoManagementBundle\InterfaceResolver\Resolver" />
             <tag name="request.param_converter" />
         </service>
+
+        <service id="Fazland\DtoManagementBundle\Serializer\EventSubscriber\DtoProxySubscriber">
+            <tag name="kernel.event_subscriber" />
+        </service>
     </services>
 </container>

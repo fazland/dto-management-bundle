@@ -47,8 +47,7 @@ class DtoProxySerializerPassTest extends TestCase
         $mock->enable();
 
         $container = $this->prophesize(ContainerBuilder::class);
-        $container->getDefinition(Argument::cetera())->shouldNotBeCalled();
-        $container->setDefinition(Argument::cetera())->shouldNotBeCalled();
+        $container->removeDefinition(Argument::cetera())->shouldNotBeCalled();
 
         $this->pass->process($container->reveal());
     }
@@ -65,12 +64,8 @@ class DtoProxySerializerPassTest extends TestCase
 
         $mock->enable();
 
-        $definition = $this->prophesize(Definition::class);
         $container = $this->prophesize(ContainerBuilder::class);
-
-        $container->getDefinition(DtoProxySubscriber::class)->willReturn($definition);
-        $definition->clearTag('kernel.event_subscriber')->shouldBeCalled();
-        $container->setDefinition(DtoProxySubscriber::class, $definition)->shouldBeCalled();
+        $container->removeDefinition(DtoProxySubscriber::class)->shouldBeCalled();
 
         $this->pass->process($container->reveal());
     }
