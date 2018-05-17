@@ -25,7 +25,7 @@ class Resolver implements ResolverInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function resolve(string $interface, ?Request $request = null)
     {
@@ -40,7 +40,7 @@ class Resolver implements ResolverInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function has(string $interface): bool
     {

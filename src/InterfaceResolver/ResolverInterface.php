@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 
 namespace Fazland\DtoManagementBundle\InterfaceResolver;
+
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -12,7 +13,7 @@ interface ResolverInterface
      * Resolve the given interface and return the corresponding
      * service from the service container.
      *
-     * @param string $interface
+     * @param string  $interface
      * @param Request $request
      *
      * @return mixed

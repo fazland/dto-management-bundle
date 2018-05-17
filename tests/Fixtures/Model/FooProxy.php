@@ -4,5 +4,4 @@ namespace Fazland\DtoManagementBundle\Tests\Fixtures\Model;
 
 class FooProxy extends Foo
 {
-
 }

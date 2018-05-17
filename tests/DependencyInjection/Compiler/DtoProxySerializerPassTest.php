@@ -9,7 +9,6 @@ use phpmock\spy\Spy;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 
 class DtoProxySerializerPassTest extends TestCase
 {

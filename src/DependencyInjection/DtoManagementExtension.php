@@ -29,6 +29,10 @@ class DtoManagementExtension extends Extension
         /** @var Definition[] $locators */
         $locators = [];
         foreach ($this->process($container, $config['namespaces']) as $interface => $definition) {
+            if (in_array($interface, $config['exclude'])) {
+                continue;
+            }
+
             if (isset($locators[$interface])) {
                 // How can this case be possible?!
                 $arguments = array_merge($locators[$interface]->getArgument(0), $definition->getArgument(0));

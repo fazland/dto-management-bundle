@@ -6,5 +6,4 @@ use Fazland\DtoManagementBundle\Proxy\ProxyInterface;
 
 class Foo implements ProxyInterface
 {
-
 }

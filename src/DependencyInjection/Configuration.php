@@ -24,6 +24,9 @@ class Configuration implements ConfigurationInterface
                     ->requiresAtLeastOneElement()
                     ->scalarPrototype()->end()
                 ->end()
+                ->arrayNode('exclude')
+                    ->scalarPrototype()->end()
+                ->end()
             ->end()
         ;
 

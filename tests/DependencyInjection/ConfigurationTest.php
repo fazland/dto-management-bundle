@@ -35,6 +35,7 @@ class ConfigurationTest extends TestCase
                 'App\\Model',
                 'App\\Model',
             ],
+            'exclude' => [],
         ];
 
         $config = $this->getConfiguration([

@@ -7,6 +7,8 @@ framework:
 dto_management:
     namespaces:
         - 'Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Model'
+    exclude:
+        - 'Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Model\Interfaces\ExcludedInterface'
 
 services:
     Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Model\:

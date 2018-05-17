@@ -2,15 +2,17 @@
 
 namespace Fazland\DtoManagementBundle;
 
+use Fazland\DtoManagementBundle\InterfaceResolver\ResolverInterface;
 use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\AppKernel;
+use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Model\Interfaces\ExcludedInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * @group functional
+ */
 class ProxyTest extends WebTestCase
 {
-    /**
-     * @group functional
-     */
     public function testShouldReturn401IfNotLoggedIn(): void
     {
         $client = $this->createClient();
@@ -20,9 +22,6 @@ class ProxyTest extends WebTestCase
         $this->assertEquals(401, $response->getStatusCode());
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-     */
     public function testShouldThrowAccessDeniedExceptionIfRoleDoesNotMatch()
     {
         $client = $this->createClient();
@@ -30,6 +29,9 @@ class ProxyTest extends WebTestCase
             'PHP_AUTH_USER' => 'user',
             'PHP_AUTH_PW' => 'user',
         ]);
+
+        $response = $client->getResponse();
+        $this->assertEquals(403, $response->getStatusCode());
     }
 
     public function testShouldExecuteOperationsIfRolesAreCorrect()
@@ -56,6 +58,15 @@ class ProxyTest extends WebTestCase
         $response = $client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals('null', $response->getContent());
+    }
+
+    public function testExcludedInterfacesShouldNotBeRegistered()
+    {
+        $client = $this->createClient();
+        $client->getKernel()->boot();
+
+        $container = $client->getContainer();
+        $this->assertFalse($container->get(ResolverInterface::class)->has(ExcludedInterface::class));
     }
 
     protected static function createKernel(array $options = [])
