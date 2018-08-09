@@ -1,5 +1,5 @@
 {
-    "name": "fazland/dto-management",
+    "name": "fazland/dto-management-bundle",
     "type": "library",
     "description": "DTO finder and param converter bundle",
     "license": "proprietary",
@@ -7,6 +7,14 @@
         {
             "name": "Massimiliano Braglia",
             "email": "massimiliano.braglia@fazland.com"
+        },
+        {
+            "name": "Alessandro Chitolina",
+            "email": "alessandro.chitolina@fazland.com"
+        },
+        {
+            "name": "Fazland Dev Team",
+            "email": "devs@fazland.com"
         }
     ],
     "require": {
