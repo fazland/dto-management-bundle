@@ -19,6 +19,7 @@ services:
         shared: false
 
     Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Transformer\TestTransform: ~
+    Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Security\AccessDeniedHandler: ~
 
 security:
     encoders:
@@ -37,6 +38,7 @@ security:
 
     firewalls:
         dev:
+            access_denied_handler: Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Security\AccessDeniedHandler
             pattern: ^/
             security: true
             provider: in_memory

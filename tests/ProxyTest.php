@@ -94,20 +94,20 @@ class ProxyTest extends WebTestCase
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected static function createKernel(array $options = []): KernelInterface
     {
         return new AppKernel('test', true);
     }
-//
-//    /**
-//     * {@inheritdoc}
-//     */
-//    public function tearDown(): void
-//    {
-//        $fs = new Filesystem();
-//        $fs->remove(__DIR__.'/Fixtures/Proxy/cache');
-//        $fs->remove(__DIR__.'/Fixtures/Proxy/logs');
-//    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function tearDown(): void
+    {
+        $fs = new Filesystem();
+        $fs->remove(__DIR__.'/Fixtures/Proxy/cache');
+        $fs->remove(__DIR__.'/Fixtures/Proxy/logs');
+    }
 }
