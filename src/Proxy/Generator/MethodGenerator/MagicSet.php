@@ -38,16 +38,40 @@ class MagicSet extends MagicMethodGenerator
         );
 
         if (! $publicProperties->isEmpty()) {
-            $callParent = 'if (isset(self::$'.$publicProperties->getName()."[\$name])) {\n"
-                .'    $returnValue = ($this->'.$valueHolderName.'->$name = $value);'
-                ."\n} else {\n    $callParent\n}\n\n";
+            $callParent = str_replace("\n", "\n    ", $callParent);
+
+            $callParent = <<<PHP
+if (isset(self::\${$publicProperties->getName()}[\$name])) {
+    \$returnValue = (\$this->$valueHolderName->\$name = \$value);
+} else {
+    $callParent
+}
+
+
+PHP;
         }
 
-        $body = "switch(\$name) {\n";
+        $body = <<<PHP
+if (! isset(self::\${$publicProperties->getName()}[\$name])) {
+    \$camelized = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', \$name))));
+    if (isset(self::\${$publicProperties->getName()}[\$camelized])) {
+        \$name = \$camelized;
+    }
+}
+
+PHP;
+
+
+        $body .= "switch(\$name) {\n";
         foreach ($propertyInterceptors as $propertyName => $interceptors) {
             $interceptors = array_map(function (string $body): string {
                 return str_replace("\n", "\n        ", $body);
             }, $interceptors);
+
+            $underscoredProperty = self::underscore($propertyName);
+            if ($underscoredProperty !== $propertyName) {
+                $body .= "    case '$underscoredProperty': \n";
+            }
 
             $body .= "    case '$propertyName': \n";
             $body .= '        '.implode(";\n        ", $interceptors).";\n        break;\n\n";
@@ -58,5 +82,10 @@ class MagicSet extends MagicMethodGenerator
         $body .= 'return $returnValue;';
 
         $this->setBody($body);
+    }
+
+    private static function underscore(string $word) : string
+    {
+        return strtolower(preg_replace('~(?<=\\w)([A-Z])~', '_$1', $word));
     }
 }

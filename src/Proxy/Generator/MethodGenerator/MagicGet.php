@@ -37,14 +37,34 @@ class MagicGet extends MagicMethodGenerator
         );
 
         if (! $publicProperties->isEmpty()) {
-            $callParent = 'if (isset(self::$'.$publicProperties->getName()."[\$name])) {\n"
-                .'    $returnValue = & $this->'.$valueHolderName.'->$name;'
-                ."\n} else {\n    $callParent\n}\n\n";
+            $callParent = str_replace("\n", "\n    ", $callParent);
+
+            $callParent = <<<PHP
+if (! isset(self::\${$publicProperties->getName()}[\$name])) {
+    \$camelized = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', \$name))));
+    if (isset(self::\${$publicProperties->getName()}[\$camelized])) {
+        \$name = \$camelized;
+    }
+}
+
+if (isset(self::\${$publicProperties->getName()}[\$name])) {
+    \$returnValue = & \$this->$valueHolderName->\$name;
+} else {
+    $callParent
+}
+
+
+PHP;
         }
 
         $body = $callParent."\n";
         $body .= 'return $returnValue;';
 
         $this->setBody($body);
+    }
+
+    private static function camelize($string)
+    {
+        return ;
     }
 }

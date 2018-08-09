@@ -9,6 +9,8 @@ use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Transformer\TestTransform;
 
 class User implements UserInterface
 {
+    public $barBar = 'test';
+
     /**
      * @Transform(TestTransform::class)
      * @Security("is_granted('ROLE_ADMIN')")

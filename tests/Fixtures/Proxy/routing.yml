@@ -9,3 +9,11 @@ protected:
 unavailable:
     path: /unavailable
     defaults: { _controller: 'AppBundle:Test:unavailable' }
+
+underscored:
+    path: /underscored
+    defaults: { _controller: 'AppBundle:Test:underscored' }
+
+camelized:
+    path: /camelized
+    defaults: { _controller: 'AppBundle:Test:camelized' }

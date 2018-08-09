@@ -23,6 +23,20 @@ class TestController extends Controller
         return new Response($this->getDump($user->foobar));
     }
 
+    public function underscoredAction(UserInterface $user): Response
+    {
+        $user->bar_bar = 'test_one';
+
+        return new Response($this->getDump($user->barBar));
+    }
+
+    public function camelizedAction(UserInterface $user): Response
+    {
+        $user->barBar = 'test_two';
+
+        return new Response($this->getDump($user->bar_bar));
+    }
+
     public function unavailableAction(UserInterface $user): Response
     {
         return new Response($this->getDump($user->getTest()));

@@ -7,6 +7,7 @@ use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\AppKernel;
 use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Model\Interfaces\ExcludedInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * @group functional
@@ -22,7 +23,30 @@ class ProxyTest extends WebTestCase
         $this->assertEquals(401, $response->getStatusCode());
     }
 
-    public function testShouldThrowAccessDeniedExceptionIfRoleDoesNotMatch()
+    public function testShouldGetAndSetPropertyWithUnderscore(): void
+    {
+        $client = $this->createClient();
+        $client->request('GET', '/underscored', [], [], [
+            'PHP_AUTH_USER' => 'user',
+            'PHP_AUTH_PW' => 'user',
+        ]);
+
+        $response = $client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('"test_one"', $response->getContent());
+
+        $client = $this->createClient();
+        $client->request('GET', '/camelized', [], [], [
+            'PHP_AUTH_USER' => 'user',
+            'PHP_AUTH_PW' => 'user',
+        ]);
+
+        $response = $client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('"test_two"', $response->getContent());
+    }
+
+    public function testShouldThrowAccessDeniedExceptionIfRoleDoesNotMatch(): void
     {
         $client = $this->createClient();
         $client->request('GET', '/protected', [], [], [
@@ -34,7 +58,7 @@ class ProxyTest extends WebTestCase
         $this->assertEquals(403, $response->getStatusCode());
     }
 
-    public function testShouldExecuteOperationsIfRolesAreCorrect()
+    public function testShouldExecuteOperationsIfRolesAreCorrect(): void
     {
         $client = $this->createClient();
         $client->request('GET', '/protected', [], [], [
@@ -47,7 +71,7 @@ class ProxyTest extends WebTestCase
         $this->assertEquals('"CIAO"', $response->getContent());
     }
 
-    public function testShouldReturnNullIfOnInvalidFlagsIsSet()
+    public function testShouldReturnNullIfOnInvalidFlagsIsSet(): void
     {
         $client = $this->createClient();
         $client->request('GET', '/unavailable', [], [], [
@@ -60,7 +84,7 @@ class ProxyTest extends WebTestCase
         $this->assertEquals('null', $response->getContent());
     }
 
-    public function testExcludedInterfacesShouldNotBeRegistered()
+    public function testExcludedInterfacesShouldNotBeRegistered(): void
     {
         $client = $this->createClient();
         $client->getKernel()->boot();
@@ -69,18 +93,21 @@ class ProxyTest extends WebTestCase
         $this->assertFalse($container->get(ResolverInterface::class)->has(ExcludedInterface::class));
     }
 
-    protected static function createKernel(array $options = [])
+    /**
+     * @inheritdoc
+     */
+    protected static function createKernel(array $options = []): KernelInterface
     {
         return new AppKernel('test', true);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function tearDown(): void
-    {
-        $fs = new Filesystem();
-        $fs->remove(__DIR__.'/Fixtures/Proxy/cache');
-        $fs->remove(__DIR__.'/Fixtures/Proxy/logs');
-    }
+//
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public function tearDown(): void
+//    {
+//        $fs = new Filesystem();
+//        $fs->remove(__DIR__.'/Fixtures/Proxy/cache');
+//        $fs->remove(__DIR__.'/Fixtures/Proxy/logs');
+//    }
 }
