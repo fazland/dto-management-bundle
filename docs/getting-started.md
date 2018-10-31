@@ -147,10 +147,14 @@ class ItemController extends AbstractController
 
 Simple, isn't it?
 
-DtoManagementBundle comes with the `ApiModelParamConverter` which will inject in your action the right implementation (the version) of the DTO.
+DtoManagementBundle comes with the `ApiModelParamConverter` which will inject in your action the right implementation (the `version`) of the DTO.
+
+In this way you can version your endpoints without changing a single line of code of your controller actions.
 
 Let's see how it is configured and how it works.
 
+- [DTO structure](./dto-structure.md)
 - [Configuration](./configuration.md)
-- [Dto structure](./dto-structure.md)
 - [Nested dtos](./nested-dtos.md)
+- [ParamConverter](./param-converter.md)
+- [DtoManagementBundle annotations](./annotations.md)

@@ -1,6 +1,8 @@
 Fazland - DtoManagementBundle
 =============================
-This bundle helps to build versioned DTOs (Data Transfer Objects) and to minimize effor while implementing your Symfony controllers.
+[![Build Status](https://travis-ci.com/fazland/dto-management-bundle.svg?branch=master)](https://travis-ci.com/fazland/dto-management-bundle)
+
+This bundle helps to build versioned DTOs (Data Transfer Objects) and to minimize effort while implementing your Symfony controllers.
 
 Requirements
 ------------
