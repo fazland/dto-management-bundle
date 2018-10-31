@@ -15,6 +15,7 @@ use ProxyManager\ProxyGenerator\ProxyGeneratorInterface;
 use ProxyManager\ProxyGenerator\Util\Properties;
 use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage as BaseExpressionLanguage;
+use Symfony\Component\Security\Core\Security as SymfonySecurity;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\MethodGenerator as ZendMethodGenerator;
 use Zend\Code\Generator\ParameterGenerator;
@@ -27,9 +28,13 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
      */
     protected $expressionLanguage;
 
-    public function __construct(BaseExpressionLanguage $expressionLanguage = null)
+    public function __construct(?BaseExpressionLanguage $expressionLanguage = null)
     {
-        $this->expressionLanguage = null !== $expressionLanguage ? $expressionLanguage : new ExpressionLanguage();
+        $this->expressionLanguage = $expressionLanguage;
+
+        if (null === $expressionLanguage && class_exists(BaseExpressionLanguage::class)) {
+            $this->expressionLanguage = new ExpressionLanguage();
+        }
     }
 
     /**
@@ -90,6 +95,14 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
                 return "\${$param} = \$this->{$locatorHolder->getName()}->get('$annotation->service')->reverseTransform(\${$param})";
 
             case $annotation instanceof Security:
+                if (! class_exists(BaseExpressionLanguage::class)) {
+                    throw new \RuntimeException('Please install symfony/expression-language');
+                }
+
+                if (! class_exists(SymfonySecurity::class)) {
+                    throw new \RuntimeException('Please install symfony/security');
+                }
+
                 $property = UniqueIdentifierGenerator::getIdentifier('check');
                 $message = var_export($annotation->message ?: 'Expression "'.$annotation->expression.'" denied access.', true);
 

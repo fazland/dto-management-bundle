@@ -7,6 +7,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Fazland\DtoManagementBundle\Annotation\Security;
 use Fazland\DtoManagementBundle\Annotation\Transform;
 use Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry;
+use Fazland\DtoManagementBundle\Proxy\Factory\AccessInterceptorFactory;
 use Kcs\ClassFinder\Finder\RecursiveFinder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -18,7 +19,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class AddInterceptorsPass implements CompilerPassInterface
 {
     /**
-     * @var \Fazland\DtoManagementBundle\Proxy\Factory\AccessInterceptorFactory
+     * @var AccessInterceptorFactory
      */
     private $proxyFactory;
 

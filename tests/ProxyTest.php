@@ -107,7 +107,7 @@ class ProxyTest extends WebTestCase
     public function tearDown(): void
     {
         $fs = new Filesystem();
-        $fs->remove(__DIR__.'/Fixtures/Proxy/cache');
-        $fs->remove(__DIR__.'/Fixtures/Proxy/logs');
+        $fs->remove(static::$kernel->getCacheDir());
+        $fs->remove(static::$kernel->getLogDir());
     }
 }
