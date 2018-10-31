@@ -30,7 +30,7 @@
         "kcs/serializer": "2.x-dev",
         "php-mock/php-mock": "^1.0",
         "php-mock/php-mock-prophecy": "^0.0.2",
-        "phpunit/phpunit": "^7.0",
+        "phpunit/phpunit": "^7.4,>=7.4.3",
         "symfony/browser-kit": "^3.4|^4.0",
         "symfony/expression-language": "^3.4|^4.0",
         "symfony/security-bundle": "^3.4|^4.0",
