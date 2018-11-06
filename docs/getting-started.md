@@ -156,5 +156,5 @@ Let's see how it is configured and how it works.
 - [DTO structure](./dto-structure.md)
 - [Configuration](./configuration.md)
 - [Nested dtos](./nested-dtos.md)
-- [ParamConverter](./param-converter.md)
+- [Param Converter](./param-converter.md)
 - [DtoManagementBundle annotations](./annotations.md)
