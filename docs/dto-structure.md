@@ -20,7 +20,7 @@ Inside this namespace you can put all your implementation of your interfaces.
 
 :warning:&nbsp;-- Namespace naming -- :warning:
 ---------------------------------------------------------
-At this moment the only way to version the DTOs is using the date in theirs namespace. This a known limitation although is the reccomended way.
+At this moment the only way to version the DTOs is using the date in theirs namespace. This a known limitation although is the recommended way.
 
 Example
 -------
@@ -40,4 +40,4 @@ Implementing a new version of the `Item` is simple. You have 2 ways:
 - extend `App\Model\v2018\v20181014\Item\Item` and just override / replace what you want
 - create another class that implements the `ItemInterface` and have a completely different DTO.
 
-Next step: [Configuration](./configuration.md)!
+Next step: [Configuration](./configuration.md)
