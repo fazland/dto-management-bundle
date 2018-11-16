@@ -25,3 +25,5 @@ That is, as the example in the beginning of these docs, you can directly inject 
         return $response;
     }
 ```
+
+Next step: [Annotations](./annotations.md)

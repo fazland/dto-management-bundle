@@ -7,8 +7,8 @@ namespace Fazland\DtoManagementBundle\Annotation;
  */
 class Security
 {
-    const ACCESS_DENIED_EXCEPTION = 'access_denied';
-    const RETURN_NULL = 'null';
+    public const ACCESS_DENIED_EXCEPTION = 'access_denied';
+    public const RETURN_NULL = 'null';
 
     /**
      * @var string
