@@ -7,6 +7,8 @@ use Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry;
 use Kcs\ClassFinder\Finder\ComposerFinder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Resource\ClassExistenceResource;
+use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
+use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -104,9 +106,11 @@ class DtoManagementExtension extends Extension
 
         $locators = [];
         foreach ($modelsByInterface as $interface => $versions) {
-            $definition = new Definition(ServiceLocator::class, [$versions]);
-            $definition->addTag('container.service_locator');
-            $locators[$interface] = $definition;
+            $container->register($id = '.dto.service_locator.'.$interface, ServiceLocator::class)
+                ->addArgument($versions)
+            ;
+
+            $locators[$interface] = new ServiceClosureArgument(new Reference($id));
         }
 
         return $locators;
@@ -127,7 +131,7 @@ class DtoManagementExtension extends Extension
                 continue;
             }
 
-            $models[$m[1]] = new Reference($reflector->getName());
+            $models[$m[1]] = new ServiceClosureArgument(new Reference($reflector->getName()));
         }
 
         return $models;

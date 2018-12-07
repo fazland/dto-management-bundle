@@ -9,6 +9,7 @@ use Fazland\DtoManagementBundle\Annotation\Transform;
 use Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry;
 use Fazland\DtoManagementBundle\Proxy\Factory\AccessInterceptorFactory;
 use Kcs\ClassFinder\Finder\RecursiveFinder;
+use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -50,13 +51,14 @@ class AddInterceptorsPass implements CompilerPassInterface
         $this->generateClassMap($cacheDir, $container->getParameter('kernel.cache_dir').'/dto-proxies-map.php');
     }
 
-    private function processLocator(ContainerBuilder $container, Definition $locator): void
+    private function processLocator(ContainerBuilder $container, ServiceClosureArgument $argument): void
     {
+        $locator = $container->getDefinition((string) $argument->getValues()[0]);
         /** @var Reference[] $versions */
         $versions = $locator->getArgument(0);
 
         foreach ($versions as $version) {
-            $definition = $container->findDefinition((string) $version);
+            $definition = $container->findDefinition((string) $version->getValues()[0]);
             $class = $definition->getClass();
             $reflector = $container->getReflectionClass($class);
 

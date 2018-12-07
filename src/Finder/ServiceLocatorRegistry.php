@@ -20,7 +20,7 @@ class ServiceLocatorRegistry
             throw new \RuntimeException('Cannot find service locator for "'.$interface.'"');
         }
 
-        return $this->locators[$interface];
+        return $this->locators[$interface]();
     }
 
     public function has(string $interface): bool

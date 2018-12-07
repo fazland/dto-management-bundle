@@ -9,6 +9,7 @@ use Fazland\DtoManagementBundle\Tests\Fixtures\DependencyInjection\Model\v2017\v
 use phpmock\Mock;
 use phpmock\spy\Spy;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
@@ -66,10 +67,13 @@ class DtoManagementExtensionTest extends TestCase
         $this->assertCount(1, $definition->getArguments());
         $this->assertCount(2, $arg = $definition->getArgument(0));
         $this->assertArrayHasKey(UserInterface::class, $arg);
-        $this->assertInstanceOf(Definition::class, $arg[UserInterface::class]);
+        $this->assertInstanceOf(ServiceClosureArgument::class, $arg[UserInterface::class]);
 
+        $reference = $arg[UserInterface::class]->getValues()[0];
+        $this->assertTrue($container->hasDefinition((string) $reference));
+        $definition = $container->getDefinition((string) $reference);
         $this->assertEquals([
-            20171215 => new Reference(User::class),
-        ], $arg[UserInterface::class]->getArgument(0));
+            20171215 => new ServiceClosureArgument(new Reference(User::class)),
+        ], $definition->getArgument(0));
     }
 }
