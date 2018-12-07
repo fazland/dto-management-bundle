@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.2",
         "doctrine/annotations": "^1.6",
         "kcs/class-finder": "^0.1,>=0.1.2",
         "ocramius/proxy-manager": "^2.1",
@@ -28,8 +28,6 @@
     },
     "require-dev": {
         "kcs/serializer": "2.x-dev",
-        "php-mock/php-mock": "^1.0",
-        "php-mock/php-mock-prophecy": "^0.0.2",
         "phpunit/phpunit": "7.4.3",
         "symfony/browser-kit": "^3.4|^4.0",
         "symfony/expression-language": "^3.4|^4.0",

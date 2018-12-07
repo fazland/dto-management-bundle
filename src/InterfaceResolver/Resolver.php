@@ -33,7 +33,7 @@ class Resolver implements ResolverInterface
             $request = $this->requestStack->getCurrentRequest();
         }
 
-        $version = (null !== $request ? $request->attributes->get('_version') : null) ?? date('Ymd');
+        $version = (null !== $request ? $request->attributes->get('_version') : null) ?? \date('Ymd');
         $locator = $this->registry->get($interface);
 
         return $locator->get($version);

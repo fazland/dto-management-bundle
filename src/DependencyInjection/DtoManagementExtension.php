@@ -7,7 +7,6 @@ use Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry;
 use Kcs\ClassFinder\Finder\ComposerFinder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Resource\ClassExistenceResource;
-use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -31,14 +30,14 @@ class DtoManagementExtension extends Extension
         /** @var Definition[] $locators */
         $locators = [];
         foreach ($this->process($container, $config['namespaces']) as $interface => $definition) {
-            if (in_array($interface, $config['exclude'])) {
+            if (\in_array($interface, $config['exclude'])) {
                 continue;
             }
 
             if (isset($locators[$interface])) {
                 // How can this case be possible?!
-                $arguments = array_merge($locators[$interface]->getArgument(0), $definition->getArgument(0));
-                $locators[$interface]->setArguments([array_values(array_combine($arguments, $arguments))]);
+                $arguments = \array_merge($locators[$interface]->getArgument(0), $definition->getArgument(0));
+                $locators[$interface]->setArguments([\array_values(\array_combine($arguments, $arguments))]);
             } else {
                 $locators[$interface] = $definition;
             }
@@ -93,8 +92,8 @@ class DtoManagementExtension extends Extension
         $finder = new ComposerFinder();
         $finder->inNamespace($namespace);
 
-        $classes = iterator_to_array($finder);
-        $interfaces = array_filter($classes, function (\ReflectionClass $class) {
+        $classes = \iterator_to_array($finder);
+        $interfaces = \array_filter($classes, function (\ReflectionClass $class) {
             return $class->isInterface();
         });
 
@@ -127,7 +126,7 @@ class DtoManagementExtension extends Extension
             }
 
             $container->addResource(new ClassExistenceResource($class, true));
-            if (! preg_match('/^'.str_replace('\\', '\\\\', $namespace).'\\\\v\d+\\\\v(\d{8})\\\\/', $class, $m)) {
+            if (! \preg_match('/^'.\str_replace('\\', '\\\\', $namespace).'\\\\v\d+\\\\v(\d{8})\\\\/', $class, $m)) {
                 continue;
             }
 

@@ -11,19 +11,10 @@ use phpmock\spy\Spy;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 class DtoManagementExtensionTest extends TestCase
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown(): void
-    {
-        Mock::disableAll();
-    }
-
     public function testLoadShouldCreateModelServices(): void
     {
         $config = [
@@ -35,28 +26,6 @@ class DtoManagementExtensionTest extends TestCase
             ],
         ];
 
-        $mock = new Spy(
-            'Fazland\DtoManagementBundle\Finder',
-            'realpath',
-            function ($value): string {
-                switch ($value) {
-                    case 'path/to/first/dir/Interfaces/':
-                        return realpath(__DIR__.'/../Fixtures/DependencyInjection/Model/Interfaces');
-
-                    case 'path/to/first/dir/':
-                        return realpath(__DIR__.'/../Fixtures/DependencyInjection/Model');
-
-                    case 'path/to/second/dir/Interfaces/':
-                        return realpath(__DIR__.'/../Fixtures/DependencyInjection/FooModel/Interfaces');
-
-                    case 'path/to/second/dir/':
-                        return realpath(__DIR__.'/../Fixtures/DependencyInjection/FooModel');
-                }
-            }
-        );
-
-        $mock->enable();
-
         $container = new ContainerBuilder();
 
         $extension = new DtoManagementExtension();
@@ -64,15 +33,15 @@ class DtoManagementExtensionTest extends TestCase
 
         $definition = $container->getDefinition(ServiceLocatorRegistry::class);
 
-        $this->assertCount(1, $definition->getArguments());
-        $this->assertCount(2, $arg = $definition->getArgument(0));
-        $this->assertArrayHasKey(UserInterface::class, $arg);
-        $this->assertInstanceOf(ServiceClosureArgument::class, $arg[UserInterface::class]);
+        self::assertCount(1, $definition->getArguments());
+        self::assertCount(2, $arg = $definition->getArgument(0));
+        self::assertArrayHasKey(UserInterface::class, $arg);
+        self::assertInstanceOf(ServiceClosureArgument::class, $arg[UserInterface::class]);
 
         $reference = $arg[UserInterface::class]->getValues()[0];
-        $this->assertTrue($container->hasDefinition((string) $reference));
+        self::assertTrue($container->hasDefinition((string) $reference));
         $definition = $container->getDefinition((string) $reference);
-        $this->assertEquals([
+        self::assertEquals([
             20171215 => new ServiceClosureArgument(new Reference(User::class)),
         ], $definition->getArgument(0));
     }

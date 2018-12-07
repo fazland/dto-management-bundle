@@ -30,6 +30,6 @@ class ServiceLocatorRegistry
 
     public function getInterfaces(): array
     {
-        return array_keys($this->locators);
+        return \array_keys($this->locators);
     }
 }

@@ -47,11 +47,11 @@ final class ProxiedMethodsFilter
      */
     private static function doFilter(ReflectionClass $class, array $excluded): array
     {
-        $ignored = array_flip(array_map('strtolower', $excluded));
+        $ignored = \array_flip(\array_map('strtolower', $excluded));
 
-        return array_filter($class->getMethods(), function (ReflectionMethod $method) use ($ignored): bool {
+        return \array_filter($class->getMethods(), function (ReflectionMethod $method) use ($ignored): bool {
             return ! (
-                \array_key_exists(strtolower($method->getName()), $ignored)
+                \array_key_exists(\strtolower($method->getName()), $ignored)
                 || self::methodCannotBeProxied($method)
             );
         });

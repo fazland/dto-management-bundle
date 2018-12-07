@@ -30,18 +30,18 @@ class ServiceLocatorTest extends TestCase
 
     public function testLocatorShouldBeInvokable()
     {
-        $this->assertTrue(is_callable($this->locator));
+        self::assertTrue(\is_callable($this->locator));
     }
 
     public function testLocatorInvokingWithNonExistentServiceReturnsNull()
     {
         $locator = $this->locator;
-        $this->assertNull($locator(20160730));
+        self::assertNull($locator(20160730));
     }
 
     public function testLocatorGetShouldReturnTheClosestLesserImplementation()
     {
-        $this->assertInstanceOf(User::class, $this->locator->get(20180101));
+        self::assertInstanceOf(User::class, $this->locator->get(20180101));
     }
 
     /**
@@ -54,7 +54,7 @@ class ServiceLocatorTest extends TestCase
 
     public function testLocatorHasShouldWork()
     {
-        $this->assertFalse($this->locator->has(20150101));
-        $this->assertTrue($this->locator->has(20171118));
+        self::assertFalse($this->locator->has(20150101));
+        self::assertTrue($this->locator->has(20171118));
     }
 }

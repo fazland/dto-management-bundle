@@ -11,6 +11,6 @@ class TestController extends Controller
 {
     public function indexAction(UserInterface $user): Response
     {
-        return new Response($user instanceof ProxyInterface ? get_parent_class($user) : get_class($user));
+        return new Response($user instanceof ProxyInterface ? \get_parent_class($user) : \get_class($user));
     }
 }

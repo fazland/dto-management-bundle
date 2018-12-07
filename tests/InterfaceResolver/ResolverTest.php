@@ -62,18 +62,18 @@ class ResolverTest extends TestCase
             ->willReturn($locator = $this->prophesize(ServiceLocator::class));
         $locator->get('20171128')->willReturn(new \stdClass());
 
-        $this->assertNotNull($this->resolver->resolve(UserInterface::class, $request->reveal()));
+        self::assertNotNull($this->resolver->resolve(UserInterface::class, $request->reveal()));
     }
 
     public function testHasShouldReturnTrueIfModelIsPresentInRegistry(): void
     {
         $this->registry->has(UserInterface::class)->willReturn(true);
-        $this->assertTrue($this->resolver->has(UserInterface::class));
+        self::assertTrue($this->resolver->has(UserInterface::class));
     }
 
     public function testHasShouldReturnFalseIfModelIsNotPresentInRegistry(): void
     {
         $this->registry->has(UserInterface::class)->willReturn(false);
-        $this->assertFalse($this->resolver->has(UserInterface::class));
+        self::assertFalse($this->resolver->has(UserInterface::class));
     }
 }

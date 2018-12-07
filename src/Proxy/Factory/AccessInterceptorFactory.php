@@ -14,7 +14,7 @@ class AccessInterceptorFactory extends AbstractBaseFactory
     private $generator;
 
     /**
-     * Change visibility of generateProxy method (protected -> public)
+     * Change visibility of generateProxy method (protected -> public).
      *
      * {@inheritdoc}
      */

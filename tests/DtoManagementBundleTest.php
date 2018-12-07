@@ -16,7 +16,7 @@ class DtoManagementBundleTest extends TestCase
         $kernel = new AppKernel('test', true);
         $kernel->boot();
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     /**

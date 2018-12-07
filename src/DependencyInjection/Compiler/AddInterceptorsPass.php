@@ -12,7 +12,6 @@ use Kcs\ClassFinder\Finder\RecursiveFinder;
 use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -34,7 +33,7 @@ class AddInterceptorsPass implements CompilerPassInterface
         $cacheDir = $container->getParameterBag()->resolveValue(
             $container->getParameter('fazland.dto-management.proxy_cache_dir')
         );
-        @mkdir($cacheDir, 0777, true);
+        @\mkdir($cacheDir, 0777, true);
 
         $this->proxyFactory = $container->get('fazland.dto-management.proxy_factory');
         AnnotationRegistry::registerUniqueLoader('class_exists');
@@ -73,7 +72,7 @@ class AddInterceptorsPass implements CompilerPassInterface
                 $annot = $this->annotationReader->getMethodAnnotation($method, Transform::class);
 
                 if (null !== $annot) {
-                    if (1 !== count($params)) {
+                    if (1 !== \count($params)) {
                         throw new \LogicException('Transformations can be applied to methods with 1 parameter only. '.$method->getName().' has '.$method->getNumberOfParameters());
                     }
 
@@ -123,7 +122,7 @@ class AddInterceptorsPass implements CompilerPassInterface
             }
 
             foreach ($subscribedServices as $name => &$service) {
-                if (is_bool($service)) {
+                if (\is_bool($service)) {
                     $service = $container->findDefinition($name)->getClass();
                 }
             }
@@ -155,6 +154,6 @@ class AddInterceptorsPass implements CompilerPassInterface
             $map[$class] = $reflector->getFileName();
         }
 
-        file_put_contents($outFile, '<?php return '.var_export($map, true).';');
+        \file_put_contents($outFile, '<?php return '.\var_export($map, true).';');
     }
 }

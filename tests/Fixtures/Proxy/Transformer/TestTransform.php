@@ -6,6 +6,6 @@ class TestTransform
 {
     public function reverseTransform($value)
     {
-        return strtoupper($value);
+        return \strtoupper($value);
     }
 }

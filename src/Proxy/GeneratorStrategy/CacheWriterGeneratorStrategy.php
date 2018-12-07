@@ -38,8 +38,8 @@ class CacheWriterGeneratorStrategy implements GeneratorStrategyInterface
      */
     public function generate(ClassGenerator $classGenerator): string
     {
-        $className = trim($classGenerator->getNamespaceName(), '\\').'\\'.trim($classGenerator->getName(), '\\');
-        $fileName = $this->configuration->getProxiesTargetDir().DIRECTORY_SEPARATOR.str_replace('\\', '', $className).'.php';
+        $className = \trim($classGenerator->getNamespaceName(), '\\').'\\'.\trim($classGenerator->getName(), '\\');
+        $fileName = $this->configuration->getProxiesTargetDir().DIRECTORY_SEPARATOR.\str_replace('\\', '', $className).'.php';
 
         $cacheFactory = new ConfigCacheFactory($this->debug);
         $cache = $cacheFactory->cache($fileName, function (ConfigCacheInterface $cache) use ($classGenerator) {
@@ -47,12 +47,12 @@ class CacheWriterGeneratorStrategy implements GeneratorStrategyInterface
             $cache->write('<?php '.$classGenerator->generate(), [new ReflectionClassResource(new \ReflectionClass($superClass))]);
         });
 
-        set_error_handler($this->emptyErrorHandler);
+        \set_error_handler($this->emptyErrorHandler);
 
         try {
             require $cache->getPath();
         } finally {
-            restore_error_handler();
+            \restore_error_handler();
         }
 
         return '';

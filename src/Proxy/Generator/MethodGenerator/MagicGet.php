@@ -37,7 +37,7 @@ class MagicGet extends MagicMethodGenerator
         );
 
         if (! $publicProperties->isEmpty()) {
-            $callParent = str_replace("\n", "\n    ", $callParent);
+            $callParent = \str_replace("\n", "\n    ", $callParent);
 
             $callParent = <<<PHP
 if (! isset(self::\${$publicProperties->getName()}[\$name])) {
@@ -65,6 +65,6 @@ PHP;
 
     private static function camelize($string)
     {
-        return ;
+        return;
     }
 }

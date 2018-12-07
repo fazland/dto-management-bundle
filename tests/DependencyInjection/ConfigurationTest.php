@@ -45,7 +45,7 @@ class ConfigurationTest extends TestCase
             ],
         ]);
 
-        $this->assertEquals($expected, $config);
+        self::assertEquals($expected, $config);
     }
 
     private function getConfiguration(array $configArray): array

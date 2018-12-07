@@ -38,7 +38,7 @@ class MagicSet extends MagicMethodGenerator
         );
 
         if (! $publicProperties->isEmpty()) {
-            $callParent = str_replace("\n", "\n    ", $callParent);
+            $callParent = \str_replace("\n", "\n    ", $callParent);
 
             $callParent = <<<PHP
 if (isset(self::\${$publicProperties->getName()}[\$name])) {
@@ -61,11 +61,10 @@ if (! isset(self::\${$publicProperties->getName()}[\$name])) {
 
 PHP;
 
-
         $body .= "switch(\$name) {\n";
         foreach ($propertyInterceptors as $propertyName => $interceptors) {
-            $interceptors = array_map(function (string $body): string {
-                return str_replace("\n", "\n        ", $body);
+            $interceptors = \array_map(function (string $body): string {
+                return \str_replace("\n", "\n        ", $body);
             }, $interceptors);
 
             $underscoredProperty = self::underscore($propertyName);
@@ -74,7 +73,7 @@ PHP;
             }
 
             $body .= "    case '$propertyName': \n";
-            $body .= '        '.implode(";\n        ", $interceptors).";\n        break;\n\n";
+            $body .= '        '.\implode(";\n        ", $interceptors).";\n        break;\n\n";
         }
         $body .= "}\n\n";
 
@@ -84,8 +83,8 @@ PHP;
         $this->setBody($body);
     }
 
-    private static function underscore(string $word) : string
+    private static function underscore(string $word): string
     {
-        return strtolower(preg_replace('~(?<=\\w)([A-Z])~', '_$1', $word));
+        return \strtolower(\preg_replace('~(?<=\\w)([A-Z])~', '_$1', $word));
     }
 }

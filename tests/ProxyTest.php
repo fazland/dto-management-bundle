@@ -20,7 +20,7 @@ class ProxyTest extends WebTestCase
         $client->request('GET', '/');
 
         $response = $client->getResponse();
-        $this->assertEquals(401, $response->getStatusCode());
+        self::assertEquals(401, $response->getStatusCode());
     }
 
     public function testShouldGetAndSetPropertyWithUnderscore(): void
@@ -32,8 +32,8 @@ class ProxyTest extends WebTestCase
         ]);
 
         $response = $client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('"test_one"', $response->getContent());
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals('"test_one"', $response->getContent());
 
         $client = $this->createClient();
         $client->request('GET', '/camelized', [], [], [
@@ -42,8 +42,8 @@ class ProxyTest extends WebTestCase
         ]);
 
         $response = $client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('"test_two"', $response->getContent());
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals('"test_two"', $response->getContent());
     }
 
     public function testShouldThrowAccessDeniedExceptionIfRoleDoesNotMatch(): void
@@ -55,7 +55,7 @@ class ProxyTest extends WebTestCase
         ]);
 
         $response = $client->getResponse();
-        $this->assertEquals(403, $response->getStatusCode());
+        self::assertEquals(403, $response->getStatusCode());
     }
 
     public function testShouldExecuteOperationsIfRolesAreCorrect(): void
@@ -67,8 +67,8 @@ class ProxyTest extends WebTestCase
         ]);
 
         $response = $client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('"CIAO"', $response->getContent());
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals('"CIAO"', $response->getContent());
     }
 
     public function testShouldReturnNullIfOnInvalidFlagsIsSet(): void
@@ -80,8 +80,8 @@ class ProxyTest extends WebTestCase
         ]);
 
         $response = $client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('null', $response->getContent());
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals('null', $response->getContent());
     }
 
     public function testExcludedInterfacesShouldNotBeRegistered(): void
@@ -90,7 +90,7 @@ class ProxyTest extends WebTestCase
         $client->getKernel()->boot();
 
         $container = $client->getContainer();
-        $this->assertFalse($container->get(ResolverInterface::class)->has(ExcludedInterface::class));
+        self::assertFalse($container->get(ResolverInterface::class)->has(ExcludedInterface::class));
     }
 
     /**

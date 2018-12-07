@@ -40,8 +40,8 @@ class AppKernel extends TestKernel
     {
         static $dir = null;
         if (null === $dir) {
-            $dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('cache', true);
-            @mkdir($dir, 0777, true);
+            $dir = \sys_get_temp_dir().DIRECTORY_SEPARATOR.\uniqid('cache', true);
+            @\mkdir($dir, 0777, true);
         }
 
         return $dir;
@@ -54,8 +54,8 @@ class AppKernel extends TestKernel
     {
         static $dir = null;
         if (null === $dir) {
-            $dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.uniqid('logs', true);
-            @mkdir($dir, 0777, true);
+            $dir = \sys_get_temp_dir().DIRECTORY_SEPARATOR.\uniqid('logs', true);
+            @\mkdir($dir, 0777, true);
         }
 
         return $dir;

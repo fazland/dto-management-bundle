@@ -16,7 +16,7 @@ class ServiceLocator implements ContainerInterface
     public function __construct(array $factories)
     {
         $this->factories = $factories;
-        ksort($this->factories);
+        \ksort($this->factories);
     }
 
     /**
@@ -24,7 +24,7 @@ class ServiceLocator implements ContainerInterface
      */
     public function has($id): bool
     {
-        return $id >= array_keys($this->factories)[0];
+        return $id >= \array_keys($this->factories)[0];
     }
 
     /**
@@ -42,7 +42,7 @@ class ServiceLocator implements ContainerInterface
         }
 
         if (null === $last) {
-            throw new ServiceNotFoundException((string) $id, null, null, array_keys($this->factories));
+            throw new ServiceNotFoundException((string) $id, null, null, \array_keys($this->factories));
         }
 
         if (true === $factory = $this->factories[$last]) {

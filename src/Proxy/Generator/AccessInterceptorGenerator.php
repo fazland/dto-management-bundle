@@ -32,7 +32,7 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
     {
         $this->expressionLanguage = $expressionLanguage;
 
-        if (null === $expressionLanguage && class_exists(BaseExpressionLanguage::class)) {
+        if (null === $expressionLanguage && \class_exists(BaseExpressionLanguage::class)) {
             $this->expressionLanguage = new ExpressionLanguage();
         }
     }
@@ -64,7 +64,7 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
 
         foreach (ProxiedMethodsFilter::getProxiedMethods($originalClass) as $proxiedMethod) {
             $interceptors = $this->generateInterceptors($proxiedMethod, $options['method_interceptors'][$proxiedMethod->getName()] ?? [], $locatorHolder);
-            if (0 === count($interceptors)) {
+            if (0 === \count($interceptors)) {
                 continue;
             }
 
@@ -95,16 +95,16 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
                 return "\${$param} = \$this->{$locatorHolder->getName()}->get('$annotation->service')->reverseTransform(\${$param})";
 
             case $annotation instanceof Security:
-                if (! class_exists(BaseExpressionLanguage::class)) {
+                if (! \class_exists(BaseExpressionLanguage::class)) {
                     throw new \RuntimeException('Please install symfony/expression-language');
                 }
 
-                if (! class_exists(SymfonySecurity::class)) {
+                if (! \class_exists(SymfonySecurity::class)) {
                     throw new \RuntimeException('Please install symfony/security');
                 }
 
                 $property = UniqueIdentifierGenerator::getIdentifier('check');
-                $message = var_export($annotation->message ?: 'Expression "'.$annotation->expression.'" denied access.', true);
+                $message = \var_export($annotation->message ?: 'Expression "'.$annotation->expression.'" denied access.', true);
 
                 $forwardedParams = [];
                 if (null !== $originalMethod) {
@@ -115,8 +115,8 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
                     $forwardedParams[] = 'value';
                 }
 
-                if (count($forwardedParams) > 0) {
-                    $usedParams = ' use ('.implode(', ', array_map(function (string $name) {
+                if (\count($forwardedParams) > 0) {
+                    $usedParams = ' use ('.\implode(', ', \array_map(function (string $name) {
                         return '$'.$name;
                     }, $forwardedParams)).')';
                 } else {
@@ -136,7 +136,7 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
     \$object = \$this;
     \$user = null !== \$token ? \$token->getUser() : null;
 
-    return {$this->expressionLanguage->compile($annotation->expression, array_merge(['auth_checker', 'token', 'object', 'user'], $forwardedParams))};
+    return {$this->expressionLanguage->compile($annotation->expression, \array_merge(['auth_checker', 'token', 'object', 'user'], $forwardedParams))};
 };
 
 if (! \$$property()) {
@@ -148,7 +148,7 @@ PHP;
 
     private function generateInterceptors(?\ReflectionMethod $originalMethod, array $interceptors, ServiceLocatorHolder $locatorHolder): array
     {
-        return array_map(function (array $interceptor) use ($originalMethod, $locatorHolder) {
+        return \array_map(function (array $interceptor) use ($originalMethod, $locatorHolder) {
             return $this->generateInterceptor($originalMethod, $interceptor['annotation'], $locatorHolder);
         }, $interceptors);
     }
@@ -170,8 +170,8 @@ PHP;
             $forwardedParams[] = ($parameter->isVariadic() ? '...' : '').'$'.$parameter->getName();
         }
 
-        $forwardedParams = implode(', ', $forwardedParams);
-        $interceptors = implode(";\n", $interceptors).';';
+        $forwardedParams = \implode(', ', $forwardedParams);
+        $interceptors = \implode(";\n", $interceptors).';';
         $return = 'return ';
 
         $returnType = $originalMethod->getReturnType();

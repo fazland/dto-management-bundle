@@ -52,9 +52,9 @@ class Constructor extends MethodGenerator
 
         return "\n\n"
             .'parent::'.$constructor->getName().'('
-            .implode(
+            .\implode(
                 ', ',
-                array_map(
+                \array_map(
                     function (ParameterGenerator $parameter): string {
                         return ($parameter->getVariadic() ? '...' : '').'$'.$parameter->getName();
                     },
@@ -73,14 +73,14 @@ class Constructor extends MethodGenerator
      */
     private static function getConstructor(\ReflectionClass $class): ?MethodReflection
     {
-        $constructors = array_map(
+        $constructors = \array_map(
             function (\ReflectionMethod $method): MethodReflection {
                 return new MethodReflection(
                     $method->getDeclaringClass()->getName(),
                     $method->getName()
                 );
             },
-            array_filter(
+            \array_filter(
                 $class->getMethods(),
                 function (\ReflectionMethod $method): bool {
                     return $method->isConstructor();
@@ -88,7 +88,7 @@ class Constructor extends MethodGenerator
             )
         );
 
-        return reset($constructors) ?: null;
+        return \reset($constructors) ?: null;
     }
 
     private static function generateUnsetAccessiblePropertiesCode(Properties $properties): string
@@ -104,9 +104,9 @@ class Constructor extends MethodGenerator
     private static function generateUnsetStatement(array $properties): string
     {
         return 'unset('
-            .implode(
+            .\implode(
                 ', ',
-                array_map(
+                \array_map(
                     function (\ReflectionProperty $property): string {
                         return '$this->'.$property->getName();
                     },

@@ -61,7 +61,7 @@ class ApiModelParamConverterTest extends WebTestCase
 
         $this->resolver->resolve(UserInterface::class, $request->reveal())
             ->willThrow(new ServiceNotFoundException('20171128'));
-        $this->assertFalse($this->converter->apply($request->reveal(), $converter));
+        self::assertFalse($this->converter->apply($request->reveal(), $converter));
     }
 
     public function testSupportsShouldReturnTrueIfModelIsPresentInRegistry(): void
@@ -72,7 +72,7 @@ class ApiModelParamConverterTest extends WebTestCase
         ]);
 
         $this->resolver->has(UserInterface::class)->willReturn(true);
-        $this->assertTrue($this->converter->supports($converter));
+        self::assertTrue($this->converter->supports($converter));
     }
 
     public function testSupportsShouldReturnFalseIfModelIsNotPresentInRegistry(): void
@@ -83,7 +83,7 @@ class ApiModelParamConverterTest extends WebTestCase
         ]);
 
         $this->resolver->has(UserInterface::class)->willReturn(false);
-        $this->assertFalse($this->converter->supports($converter));
+        self::assertFalse($this->converter->supports($converter));
     }
 
     /**
@@ -94,10 +94,10 @@ class ApiModelParamConverterTest extends WebTestCase
         $client = static::createClient();
 
         $client->request('GET', '/', [], [], ['HTTP_X_VERSION' => '20171201']);
-        $this->assertEquals(User20171128::class, $client->getResponse()->getContent());
+        self::assertEquals(User20171128::class, $client->getResponse()->getContent());
 
         $client->request('GET', '/', [], [], ['HTTP_X_VERSION' => '20171226']);
-        $this->assertEquals(User20171215::class, $client->getResponse()->getContent());
+        self::assertEquals(User20171215::class, $client->getResponse()->getContent());
     }
 
     /**

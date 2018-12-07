@@ -4,14 +4,21 @@ namespace Fazland\DtoManagementBundle\Tests\DependencyInjection\Compiler;
 
 use Fazland\DtoManagementBundle\DependencyInjection\Compiler\DtoProxySerializerPass;
 use Fazland\DtoManagementBundle\Serializer\EventSubscriber\DtoProxySubscriber;
+use Fazland\DtoManagementBundle\Utils\ClassUtils;
 use phpmock\Mock;
 use phpmock\spy\Spy;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class DtoProxySerializerPassTest extends TestCase
 {
+    /**
+     * @var ClassUtils|ObjectProphecy
+     */
+    private $classUtils;
+
     /**
      * @var DtoProxySerializerPass
      */
@@ -22,28 +29,13 @@ class DtoProxySerializerPassTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->pass = new DtoProxySerializerPass();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown(): void
-    {
-        Mock::disableAll();
+        $this->classUtils = $this->prophesize(ClassUtils::class);
+        $this->pass = new DtoProxySerializerPass($this->classUtils->reveal());
     }
 
     public function testProcessShouldNotActIfSerializerIsRequired(): void
     {
-        $mock = new Spy(
-            'Fazland\DtoManagementBundle\DependencyInjection\Compiler',
-            'interface_exists',
-            function (string $interface) {
-                return true;
-            }
-        );
-
-        $mock->enable();
+        $this->classUtils->interfaceExists(Argument::type('string'))->willReturn(true);
 
         $container = $this->prophesize(ContainerBuilder::class);
         $container->removeDefinition(Argument::cetera())->shouldNotBeCalled();
@@ -53,15 +45,7 @@ class DtoProxySerializerPassTest extends TestCase
 
     public function testProcessShouldRemoveSubscriberTagIfSerializerIsNotRequired(): void
     {
-        $mock = new Spy(
-            'Fazland\DtoManagementBundle\DependencyInjection\Compiler',
-            'interface_exists',
-            function (string $interface) {
-                return false;
-            }
-        );
-
-        $mock->enable();
+        $this->classUtils->interfaceExists(Argument::type('string'))->willReturn(false);
 
         $container = $this->prophesize(ContainerBuilder::class);
         $container->removeDefinition(DtoProxySubscriber::class)->shouldBeCalled();

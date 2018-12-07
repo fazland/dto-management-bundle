@@ -19,7 +19,7 @@ class GetSubscribedServices extends MethodGenerator
         ;
 
         $callParent = null !== $parent ? "\$parentServices = parent::getSubscribedServices();\n" : "\$parentServices = [];\n";
-        $subscribedServices = var_export($subscribedServices, true);
+        $subscribedServices = \var_export($subscribedServices, true);
 
         $body = <<<PHP
 $callParent
