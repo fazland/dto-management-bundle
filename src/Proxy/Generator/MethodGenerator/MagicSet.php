@@ -29,13 +29,18 @@ class MagicSet extends MagicMethodGenerator
 
         $this->setDocBlock(($parent ? "{@inheritDoc}\n" : '')."@param string \$name\n@param mixed \$value\n\n@return mixed");
 
-        $callParent = PublicScopeSimulator::getPublicAccessSimulationCode(
-            PublicScopeSimulator::OPERATION_SET,
-            'name',
-            'value',
-            $valueHolder,
-            'returnValue'
-        );
+        $callParent = <<<PHP
+\$targetObject = \$this->$valueHolderName;
+\$accessor = function & () use (\$targetObject, \$name, \$value) {
+    \$targetObject->\$name = \$value;
+
+    return \$targetObject->\$name;
+};
+\$backtrace = debug_backtrace(true);
+\$scopeObject = isset(\$backtrace[1]['object']) ? \$backtrace[1]['object'] : new \ProxyManager\Stub\EmptyClassStub();
+\$accessor = \$accessor->bindTo(\$scopeObject, get_class(\$scopeObject));
+\$returnValue = & \$accessor();
+PHP;
 
         if (! $publicProperties->isEmpty()) {
             $callParent = \str_replace("\n", "\n    ", $callParent);
