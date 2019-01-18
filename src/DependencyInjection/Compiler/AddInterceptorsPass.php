@@ -28,7 +28,7 @@ class AddInterceptorsPass implements CompilerPassInterface
      */
     private $annotationReader;
 
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $cacheDir = $container->getParameterBag()->resolveValue(
             $container->getParameter('fazland.dto-management.proxy_cache_dir')
@@ -68,29 +68,29 @@ class AddInterceptorsPass implements CompilerPassInterface
             foreach ($reflector->getMethods() as $method) {
                 $params = $method->getParameters();
 
-                /** @var Transform $annot */
-                $annot = $this->annotationReader->getMethodAnnotation($method, Transform::class);
+                /** @var Transform $annotation */
+                $annotation = $this->annotationReader->getMethodAnnotation($method, Transform::class);
 
-                if (null !== $annot) {
+                if (null !== $annotation) {
                     if (1 !== \count($params)) {
                         throw new \LogicException('Transformations can be applied to methods with 1 parameter only. '.$method->getName().' has '.$method->getNumberOfParameters());
                     }
 
-                    $subscribedServices[$annot->service] = true;
+                    $subscribedServices[$annotation->service] = true;
                     $methodInterceptors[$method->getName()][] = [
-                        'annotation' => $annot,
+                        'annotation' => $annotation,
                         'parameter' => $params[0]->getName(),
                     ];
                 }
 
                 /** @var Security $annot */
-                $annot = $this->annotationReader->getMethodAnnotation($method, Security::class);
+                $annotation = $this->annotationReader->getMethodAnnotation($method, Security::class);
 
-                if (null !== $annot) {
+                if (null !== $annotation) {
                     $subscribedServices['security.authorization_checker'] = AuthorizationCheckerInterface::class;
                     $subscribedServices['security.token_storage'] = TokenStorageInterface::class;
                     $methodInterceptors[$method->getName()][] = [
-                        'annotation' => $annot,
+                        'annotation' => $annotation,
                         'parameter' => '',
                     ];
                 }
@@ -98,24 +98,24 @@ class AddInterceptorsPass implements CompilerPassInterface
 
             foreach ($reflector->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
                 /** @var Transform $annot */
-                $annot = $this->annotationReader->getPropertyAnnotation($property, Transform::class);
+                $annotation = $this->annotationReader->getPropertyAnnotation($property, Transform::class);
 
-                if (null !== $annot) {
-                    $subscribedServices[$annot->service] = true;
+                if (null !== $annotation) {
+                    $subscribedServices[$annotation->service] = true;
                     $propertyInterceptors[$property->getName()][] = [
-                        'annotation' => $annot,
+                        'annotation' => $annotation,
                         'parameter' => 'value',
                     ];
                 }
 
                 /** @var Security $annot */
-                $annot = $this->annotationReader->getPropertyAnnotation($property, Security::class);
+                $annotation = $this->annotationReader->getPropertyAnnotation($property, Security::class);
 
-                if (null !== $annot) {
+                if (null !== $annotation) {
                     $subscribedServices['security.authorization_checker'] = AuthorizationCheckerInterface::class;
                     $subscribedServices['security.token_storage'] = TokenStorageInterface::class;
                     $propertyInterceptors[$property->getName()][] = [
-                        'annotation' => $annot,
+                        'annotation' => $annotation,
                         'parameter' => '',
                     ];
                 }
@@ -126,6 +126,8 @@ class AddInterceptorsPass implements CompilerPassInterface
                     $service = $container->findDefinition($name)->getClass();
                 }
             }
+
+            unset($service);
 
             if ($methodInterceptors || $propertyInterceptors) {
                 $proxyClass = $this->proxyFactory->generateProxy($class, [

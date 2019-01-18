@@ -30,7 +30,7 @@ class ServiceLocator implements ContainerInterface
     /**
      * {@inheritdoc}
      */
-    public function get($id)
+    public function get($id): object
     {
         $last = null;
         foreach ($this->factories as $version => $service) {
@@ -57,7 +57,7 @@ class ServiceLocator implements ContainerInterface
         }
     }
 
-    public function __invoke($id)
+    public function __invoke($id): ?object
     {
         try {
             return $this->get($id);

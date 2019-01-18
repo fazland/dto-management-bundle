@@ -18,7 +18,7 @@ class Resolver implements ResolverInterface
      */
     private $requestStack;
 
-    public function __construct(ServiceLocatorRegistry $registry, RequestStack $requestStack = null)
+    public function __construct(ServiceLocatorRegistry $registry, ?RequestStack $requestStack = null)
     {
         $this->registry = $registry;
         $this->requestStack = $requestStack;
@@ -33,7 +33,7 @@ class Resolver implements ResolverInterface
             $request = $this->requestStack->getCurrentRequest();
         }
 
-        $version = (null !== $request ? $request->attributes->get('_version') : null) ?? \date('Ymd');
+        $version = (null !== $request ? $request->attributes->get('_version') : null) ?? (new \DateTime())->format('Ymd');
         $locator = $this->registry->get($interface);
 
         return $locator->get($version);
