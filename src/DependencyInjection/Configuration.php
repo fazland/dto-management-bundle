@@ -13,8 +13,13 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): NodeParentInterface
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('dto_management');
+        if (\method_exists(TreeBuilder::class, 'getRootNode')) {
+            $treeBuilder = new TreeBuilder('dto_management');
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            $treeBuilder = new TreeBuilder();
+            $rootNode = $treeBuilder->root('dto_management');
+        }
 
         $rootNode
             ->fixXmlConfig('namespace')
