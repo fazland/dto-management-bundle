@@ -131,7 +131,7 @@ class ItemController extends AbstractController
      *
      * @return Response
      */
-    public function patchAction(Entity\Item\Item $item, ItemInterface $dto): Response
+    public function deleteAction(Entity\Item\Item $item, ItemInterface $dto): Response
     {
         $dto->setItem($item);
 
