@@ -29,7 +29,7 @@ class DtoProxySubscriberTest extends TestCase
         self::assertEquals([Events::PRE_SERIALIZE => ['onPreSerialize', 20]], DtoProxySubscriber::getSubscribedEvents());
     }
 
-    public function getNonProxyValues()
+    public function getNonProxyValues(): iterable
     {
         yield [0];
         yield [0.0];

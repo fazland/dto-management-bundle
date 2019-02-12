@@ -30,7 +30,10 @@ class ResolverTest extends TestCase
      */
     private $resolver;
 
-    protected function setUp()
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
     {
         $this->registry = $this->prophesize(ServiceLocatorRegistry::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
@@ -41,25 +44,27 @@ class ResolverTest extends TestCase
     /**
      * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
-    public function testResolveShouldThrowServiceNotFoundException()
+    public function testResolveShouldThrowServiceNotFoundException(): void
     {
         $request = $this->prophesize(Request::class);
         $request->attributes = new ParameterBag(['_version' => '20171128']);
 
         $this->registry->get(UserInterface::class)
-            ->willReturn($locator = $this->prophesize(ServiceLocator::class));
+            ->willReturn($locator = $this->prophesize(ServiceLocator::class))
+        ;
         $locator->get('20171128')->willThrow(new ServiceNotFoundException('20171128'));
 
         $this->resolver->resolve(UserInterface::class, $request->reveal());
     }
 
-    public function testResolveShouldReturnTheService()
+    public function testResolveShouldReturnTheService(): void
     {
         $request = $this->prophesize(Request::class);
         $request->attributes = new ParameterBag(['_version' => '20171128']);
 
         $this->registry->get(UserInterface::class)
-            ->willReturn($locator = $this->prophesize(ServiceLocator::class));
+            ->willReturn($locator = $this->prophesize(ServiceLocator::class))
+        ;
         $locator->get('20171128')->willReturn(new \stdClass());
 
         self::assertNotNull($this->resolver->resolve(UserInterface::class, $request->reveal()));

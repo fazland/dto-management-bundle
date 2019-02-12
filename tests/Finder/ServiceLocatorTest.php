@@ -13,7 +13,10 @@ class ServiceLocatorTest extends TestCase
      */
     private $locator;
 
-    protected function setUp()
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
     {
         $this->locator = new ServiceLocator([
             20171215 => function () {
@@ -28,18 +31,18 @@ class ServiceLocatorTest extends TestCase
         ]);
     }
 
-    public function testLocatorShouldBeInvokable()
+    public function testLocatorShouldBeInvokable(): void
     {
-        self::assertTrue(\is_callable($this->locator));
+        self::assertInternalType('callable', $this->locator);
     }
 
-    public function testLocatorInvokingWithNonExistentServiceReturnsNull()
+    public function testLocatorInvokingWithNonExistentServiceReturnsNull(): void
     {
         $locator = $this->locator;
         self::assertNull($locator(20160730));
     }
 
-    public function testLocatorGetShouldReturnTheClosestLesserImplementation()
+    public function testLocatorGetShouldReturnTheClosestLesserImplementation(): void
     {
         self::assertInstanceOf(User::class, $this->locator->get(20180101));
     }
@@ -47,12 +50,12 @@ class ServiceLocatorTest extends TestCase
     /**
      * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
-    public function testLocatorGetShouldThrowIfNoImplementationIsAvailableForDate()
+    public function testLocatorGetShouldThrowIfNoImplementationIsAvailableForDate(): void
     {
         $this->locator->get(20150101);
     }
 
-    public function testLocatorHasShouldWork()
+    public function testLocatorHasShouldWork(): void
     {
         self::assertFalse($this->locator->has(20150101));
         self::assertTrue($this->locator->has(20171118));

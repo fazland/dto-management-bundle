@@ -104,7 +104,7 @@ class ProxyTest extends WebTestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         $fs = new Filesystem();
         $fs->remove(static::$kernel->getCacheDir());

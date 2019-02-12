@@ -25,6 +25,9 @@ class AppKernel extends TestKernel
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function boot(): void
     {
         parent::boot();
@@ -35,7 +38,8 @@ class AppKernel extends TestKernel
 
                 // Tests set the X-Version header, set the version attribute accordingly.
                 $req->attributes->set('_version', $req->headers->get('X-Version', (new \DateTime())->format('Ymd')));
-            });
+            })
+        ;
     }
 
     /**

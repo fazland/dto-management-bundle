@@ -4,10 +4,10 @@ namespace Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\Controller;
 
 use Fazland\DtoManagementBundle\Proxy\ProxyInterface;
 use Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\Model\Interfaces\UserInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class TestController extends Controller
+class TestController extends AbstractController
 {
     public function indexAction(UserInterface $user): Response
     {

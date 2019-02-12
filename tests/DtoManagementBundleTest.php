@@ -22,7 +22,7 @@ class DtoManagementBundleTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         $fs = new Filesystem();
         $fs->remove(__DIR__.'/Fixtures/DependencyInjection/cache');

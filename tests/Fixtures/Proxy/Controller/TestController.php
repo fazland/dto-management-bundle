@@ -3,11 +3,11 @@
 namespace Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Controller;
 
 use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Model\Interfaces\UserInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\Test\VarDumperTestTrait;
 
-class TestController extends Controller
+class TestController extends AbstractController
 {
     use VarDumperTestTrait;
 
