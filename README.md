@@ -35,4 +35,4 @@ Contributions are welcome. Feel free to open a PR or file an issue here on GitHu
 
 License
 -------
-DtoManagementBundle is licensed under the MIT License - see the [LICENSE](https://github.com/fazland/Notifire/blob/master/LICENSE) file for details.
+DtoManagementBundle is licensed under the MIT License - see the [LICENSE](https://github.com/fazland/dto-management-bundle/blob/master/LICENSE) file for details.
