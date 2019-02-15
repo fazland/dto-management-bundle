@@ -5,10 +5,10 @@ namespace Fazland\DtoManagementBundle\Utils;
 class ClassUtils
 {
     /**
-     * Checks if an interface exists
+     * Checks if an interface exists.
      *
      * @param string $classOrInterface
-     * @param bool $autoload
+     * @param bool   $autoload
      *
      * @return bool
      */

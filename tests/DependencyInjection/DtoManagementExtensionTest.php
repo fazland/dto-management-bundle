@@ -6,8 +6,6 @@ use Fazland\DtoManagementBundle\DependencyInjection\DtoManagementExtension;
 use Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry;
 use Fazland\DtoManagementBundle\Tests\Fixtures\DependencyInjection\Model\Interfaces\UserInterface;
 use Fazland\DtoManagementBundle\Tests\Fixtures\DependencyInjection\Model\v2017\v20171215\User;
-use phpmock\Mock;
-use phpmock\spy\Spy;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

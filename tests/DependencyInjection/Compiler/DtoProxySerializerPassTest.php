@@ -5,8 +5,6 @@ namespace Fazland\DtoManagementBundle\Tests\DependencyInjection\Compiler;
 use Fazland\DtoManagementBundle\DependencyInjection\Compiler\DtoProxySerializerPass;
 use Fazland\DtoManagementBundle\Serializer\EventSubscriber\DtoProxySubscriber;
 use Fazland\DtoManagementBundle\Utils\ClassUtils;
-use phpmock\Mock;
-use phpmock\spy\Spy;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
