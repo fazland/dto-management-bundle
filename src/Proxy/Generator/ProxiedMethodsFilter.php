@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Fazland\DtoManagementBundle\Proxy\Generator;
 
@@ -36,7 +34,7 @@ final class ProxiedMethodsFilter
      */
     public static function getProxiedMethods(ReflectionClass $class, array $excluded = null): array
     {
-        return self::doFilter($class, (null === $excluded) ? self::$defaultExcluded : $excluded);
+        return self::doFilter($class, $excluded ?? self::$defaultExcluded);
     }
 
     /**
@@ -49,7 +47,7 @@ final class ProxiedMethodsFilter
     {
         $ignored = \array_flip(\array_map('strtolower', $excluded));
 
-        return \array_filter($class->getMethods(), function (ReflectionMethod $method) use ($ignored): bool {
+        return \array_filter($class->getMethods(), static function (ReflectionMethod $method) use ($ignored): bool {
             return ! (
                 \array_key_exists(\strtolower($method->getName()), $ignored)
                 || self::methodCannotBeProxied($method)

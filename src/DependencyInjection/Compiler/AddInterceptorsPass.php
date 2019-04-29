@@ -33,7 +33,10 @@ class AddInterceptorsPass implements CompilerPassInterface
         $cacheDir = $container->getParameterBag()->resolveValue(
             $container->getParameter('fazland.dto-management.proxy_cache_dir')
         );
-        @\mkdir($cacheDir, 0777, true);
+
+        if (! @\mkdir($cacheDir, 0777, true) && ! \is_dir($cacheDir)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $cacheDir));
+        }
 
         $this->proxyFactory = $container->get('fazland.dto-management.proxy_factory');
         AnnotationRegistry::registerUniqueLoader('class_exists');

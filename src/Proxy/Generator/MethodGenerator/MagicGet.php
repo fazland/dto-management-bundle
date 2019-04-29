@@ -62,9 +62,4 @@ PHP;
 
         $this->setBody($body);
     }
-
-    private static function camelize($string)
-    {
-        return;
-    }
 }

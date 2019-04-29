@@ -30,7 +30,7 @@ class DtoManagementExtension extends Extension
         /** @var Definition[] $locators */
         $locators = [];
         foreach ($this->process($container, $config['namespaces']) as $interface => $definition) {
-            if (\in_array($interface, $config['exclude'])) {
+            if (\in_array($interface, $config['exclude'], true)) {
                 continue;
             }
 
