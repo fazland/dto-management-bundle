@@ -28,7 +28,7 @@ final class DtoManagementBundle extends Bundle
         $cacheDir = $this->container->getParameter('kernel.cache_dir');
 
         $classMap = require "$cacheDir/dto-proxies-map.php";
-        \spl_autoload_register(function (string $className) use (&$classMap): bool {
+        \spl_autoload_register(static function (string $className) use (&$classMap): bool {
             if (! isset($classMap[$className])) {
                 return false;
             }

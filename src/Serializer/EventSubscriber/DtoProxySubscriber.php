@@ -3,7 +3,6 @@
 namespace Fazland\DtoManagementBundle\Serializer\EventSubscriber;
 
 use Fazland\DtoManagementBundle\Proxy\ProxyInterface;
-use Kcs\Serializer\EventDispatcher\Events;
 use Kcs\Serializer\EventDispatcher\PreSerializeEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -29,7 +28,8 @@ class DtoProxySubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Events::PRE_SERIALIZE => ['onPreSerialize', 20],
+            // Cannot use the constant here, as if serializer is non-existent an error would be thrown.
+            'serializer.pre_serialize' => ['onPreSerialize', 20],
         ];
     }
 }

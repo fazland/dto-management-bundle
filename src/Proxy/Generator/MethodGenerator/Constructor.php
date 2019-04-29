@@ -35,13 +35,13 @@ class Constructor extends MethodGenerator
             '$this->'.$valueHolder->getName().' = new \stdClass();'."\n"
             .'$this->'.$locator->getName().' = $'.$locator->getName().';'."\n"
             .self::generateUnsetAccessiblePropertiesCode(Properties::fromReflectionClass($originalClass))
-            .self::generateOriginalConstructorCall($originalClass, $valueHolder)
+            .self::generateOriginalConstructorCall($originalClass)
         );
 
         return $constructor;
     }
 
-    private static function generateOriginalConstructorCall(\ReflectionClass $class, PropertyGenerator $valueHolder): string
+    private static function generateOriginalConstructorCall(\ReflectionClass $class): string
     {
         $originalConstructor = self::getConstructor($class);
         if (null === $originalConstructor) {
@@ -55,7 +55,7 @@ class Constructor extends MethodGenerator
             .\implode(
                 ', ',
                 \array_map(
-                    function (ParameterGenerator $parameter): string {
+                    static function (ParameterGenerator $parameter): string {
                         return ($parameter->getVariadic() ? '...' : '').'$'.$parameter->getName();
                     },
                     $constructor->getParameters()
@@ -74,7 +74,7 @@ class Constructor extends MethodGenerator
     private static function getConstructor(\ReflectionClass $class): ?MethodReflection
     {
         $constructors = \array_map(
-            function (\ReflectionMethod $method): MethodReflection {
+            static function (\ReflectionMethod $method): MethodReflection {
                 return new MethodReflection(
                     $method->getDeclaringClass()->getName(),
                     $method->getName()
@@ -82,7 +82,7 @@ class Constructor extends MethodGenerator
             },
             \array_filter(
                 $class->getMethods(),
-                function (\ReflectionMethod $method): bool {
+                static function (\ReflectionMethod $method): bool {
                     return $method->isConstructor();
                 }
             )
@@ -107,7 +107,7 @@ class Constructor extends MethodGenerator
             .\implode(
                 ', ',
                 \array_map(
-                    function (\ReflectionProperty $property): string {
+                    static function (\ReflectionProperty $property): string {
                         return '$this->'.$property->getName();
                     },
                     $properties

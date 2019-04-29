@@ -14,8 +14,7 @@ class MagicIsset extends MagicMethodGenerator
 {
     public function __construct(
         ReflectionClass $originalClass,
-        ValueHolderProperty $valueHolder,
-        PublicPropertiesMap $publicProperties
+        ValueHolderProperty $valueHolder
     ) {
         parent::__construct($originalClass, '__isset', [new ParameterGenerator('name')]);
 

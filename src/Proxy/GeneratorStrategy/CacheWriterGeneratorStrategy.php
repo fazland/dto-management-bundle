@@ -42,7 +42,7 @@ class CacheWriterGeneratorStrategy implements GeneratorStrategyInterface
         $fileName = $this->configuration->getProxiesTargetDir().DIRECTORY_SEPARATOR.\str_replace('\\', '', $className).'.php';
 
         $cacheFactory = new ConfigCacheFactory($this->debug);
-        $cache = $cacheFactory->cache($fileName, function (ConfigCacheInterface $cache) use ($classGenerator) {
+        $cache = $cacheFactory->cache($fileName, static function (ConfigCacheInterface $cache) use ($classGenerator) {
             $superClass = $classGenerator->getExtendedClass();
             $cache->write('<?php '.$classGenerator->generate(), [new ReflectionClassResource(new \ReflectionClass($superClass))]);
         });

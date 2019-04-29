@@ -82,7 +82,7 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
 
         $classGenerator->addMethodFromGenerator(new MethodGenerator\MagicSet($originalClass, $valueHolder, $publicProperties, $propertyInterceptors));
         $classGenerator->addMethodFromGenerator(new MethodGenerator\MagicGet($originalClass, $valueHolder, $publicProperties));
-        $classGenerator->addMethodFromGenerator(new MethodGenerator\MagicIsset($originalClass, $valueHolder, $publicProperties));
+        $classGenerator->addMethodFromGenerator(new MethodGenerator\MagicIsset($originalClass, $valueHolder));
         $classGenerator->addMethodFromGenerator(new MethodGenerator\GetSubscribedServices($originalClass, $options['services']));
     }
 

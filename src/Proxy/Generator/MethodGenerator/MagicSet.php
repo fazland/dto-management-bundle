@@ -67,7 +67,7 @@ PHP;
 
         $body .= "switch(\$name) {\n";
         foreach ($propertyInterceptors as $propertyName => $interceptors) {
-            $interceptors = \array_map(function (string $body): string {
+            $interceptors = \array_map(static function (string $body): string {
                 return \str_replace("\n", "\n        ", $body);
             }, $interceptors);
 
