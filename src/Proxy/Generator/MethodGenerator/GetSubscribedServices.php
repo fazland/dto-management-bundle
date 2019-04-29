@@ -23,7 +23,7 @@ class GetSubscribedServices extends MethodGenerator
 
         $body = <<<PHP
 $callParent
-return array_merge($subscribedServices, \$parentServices);
+return \array_merge($subscribedServices, \$parentServices);
 PHP;
 
         $this->setBody($body);

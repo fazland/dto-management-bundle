@@ -116,7 +116,7 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
                 }
 
                 if (\count($forwardedParams) > 0) {
-                    $usedParams = ' use ('.\implode(', ', \array_map(function (string $name) {
+                    $usedParams = ' use ('.\implode(', ', \array_map(static function (string $name) {
                         return '$'.$name;
                     }, $forwardedParams)).')';
                 } else {

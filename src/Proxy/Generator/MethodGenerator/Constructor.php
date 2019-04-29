@@ -23,6 +23,7 @@ class Constructor extends MethodGenerator
     public static function generateMethod(\ReflectionClass $originalClass, PropertyGenerator $valueHolder, PropertyGenerator $locator): self
     {
         $originalConstructor = self::getConstructor($originalClass);
+        $originalProperties = Properties::fromReflectionClass($originalClass);
 
         $constructor = $originalConstructor
             ? self::fromReflection($originalConstructor)
@@ -32,9 +33,9 @@ class Constructor extends MethodGenerator
 
         $constructor->setDocBlock('{@inheritDoc}');
         $constructor->setBody(
-            '$this->'.$valueHolder->getName().' = new \stdClass();'."\n"
+            '$this->'.$valueHolder->getName().' = '.self::generateAnonymousClassValueHolder($originalProperties)."\n"
             .'$this->'.$locator->getName().' = $'.$locator->getName().';'."\n"
-            .self::generateUnsetAccessiblePropertiesCode(Properties::fromReflectionClass($originalClass))
+            .self::generateUnsetAccessiblePropertiesCode($originalProperties)
             .self::generateOriginalConstructorCall($originalClass)
         );
 
@@ -89,6 +90,17 @@ class Constructor extends MethodGenerator
         );
 
         return \reset($constructors) ?: null;
+    }
+
+    private static function generateAnonymousClassValueHolder(Properties $properties): string
+    {
+        $accessibleProperties = $properties->getPublicProperties();
+
+        return "new class extends \stdClass {\n".
+            \implode("\n", \array_map(static function (\ReflectionProperty $property): string {
+                return '    public $'.$property->getName().';';
+            }, $accessibleProperties))
+            ."\n};";
     }
 
     private static function generateUnsetAccessiblePropertiesCode(Properties $properties): string

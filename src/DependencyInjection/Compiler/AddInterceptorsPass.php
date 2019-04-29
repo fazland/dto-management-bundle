@@ -156,6 +156,10 @@ class AddInterceptorsPass implements CompilerPassInterface
         $finder = new RecursiveFinder($cacheDir);
 
         foreach ($finder as $class => $reflector) {
+            if (0 === \strpos($class, "class@anonymous\x00")) {
+                continue;
+            }
+
             $map[$class] = $reflector->getFileName();
         }
 

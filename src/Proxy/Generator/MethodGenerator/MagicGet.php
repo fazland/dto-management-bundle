@@ -41,7 +41,7 @@ class MagicGet extends MagicMethodGenerator
 
             $callParent = <<<PHP
 if (! isset(self::\${$publicProperties->getName()}[\$name])) {
-    \$camelized = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', \$name))));
+    \$camelized = \\lcfirst(\\str_replace(' ', '', \\ucwords(\\str_replace('_', ' ', \$name))));
     if (isset(self::\${$publicProperties->getName()}[\$camelized])) {
         \$name = \$camelized;
     }

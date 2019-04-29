@@ -35,9 +35,9 @@ class MagicSet extends MagicMethodGenerator
 
     return \$targetObject->\$name;
 };
-\$backtrace = debug_backtrace(true);
+\$backtrace = \\debug_backtrace(true);
 \$scopeObject = isset(\$backtrace[1]['object']) ? \$backtrace[1]['object'] : new \ProxyManager\Stub\EmptyClassStub();
-\$accessor = \$accessor->bindTo(\$scopeObject, get_class(\$scopeObject));
+\$accessor = \$accessor->bindTo(\$scopeObject, \\get_class(\$scopeObject));
 \$returnValue = & \$accessor();
 PHP;
 
@@ -57,7 +57,7 @@ PHP;
 
         $body = <<<PHP
 if (! isset(self::\${$publicProperties->getName()}[\$name])) {
-    \$camelized = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', \$name))));
+    \$camelized = \\lcfirst(\\str_replace(' ', '', \\ucwords(\\str_replace('_', ' ', \$name))));
     if (isset(self::\${$publicProperties->getName()}[\$camelized])) {
         \$name = \$camelized;
     }
