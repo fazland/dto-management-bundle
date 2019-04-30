@@ -2,6 +2,7 @@
 
 namespace Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Controller;
 
+use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\SemVerModel;
 use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Model\Interfaces\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,5 +41,10 @@ class TestController extends AbstractController
     public function unavailableAction(UserInterface $user): Response
     {
         return new Response($this->getDump($user->getTest()));
+    }
+
+    public function semverAction(SemVerModel\Interfaces\UserInterface $user): Response
+    {
+        return new Response($this->getDump($user->getFoo()));
     }
 }

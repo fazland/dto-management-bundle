@@ -14,13 +14,11 @@ This means that `v2018` will contain ALL 2018 released DTOs.
 
 ###### But how are the DTOs implementation structured?
 
-Use a date as the version: `App\Model\v2018\v20181014`.
+The recommended way is to use the release date as the version. Ex: `App\Model\v2018\v20181014`.
+However, you can use any version recognized by PHP `version_compare` function
+(`v1\v1_1_0` for version 1.1.0, `v2\v2_1_alpha_2` for version 2.1-alpha.2)
 
 Inside this namespace you can put all your implementation of your interfaces.
-
-:warning:&nbsp;-- Namespace naming -- :warning:
----------------------------------------------------------
-At this moment the only way to version the DTOs is using the date in theirs namespace. This a known limitation although is the recommended way.
 
 Example
 -------

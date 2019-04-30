@@ -93,7 +93,7 @@ class DtoManagementExtension extends Extension
         $finder->inNamespace($namespace);
 
         $classes = \iterator_to_array($finder);
-        $interfaces = \array_filter($classes, function (\ReflectionClass $class) {
+        $interfaces = \array_filter($classes, static function (\ReflectionClass $class) {
             return $class->isInterface();
         });
 
@@ -126,11 +126,11 @@ class DtoManagementExtension extends Extension
             }
 
             $container->addResource(new ClassExistenceResource($class, true));
-            if (! \preg_match('/^'.\str_replace('\\', '\\\\', $namespace).'\\\\v\d+\\\\v(\d{8})\\\\/', $class, $m)) {
+            if (! \preg_match('/^'.\str_replace('\\', '\\\\', $namespace).'\\\\v\d+\\\\v(.+)\\\\/', $class, $m)) {
                 continue;
             }
 
-            $models[$m[1]] = new ServiceClosureArgument(new Reference($reflector->getName()));
+            $models[\str_replace('_', '.', $m[1])] = new ServiceClosureArgument(new Reference($reflector->getName()));
         }
 
         return $models;
