@@ -75,5 +75,9 @@ class DtoManagementExtensionTest extends TestCase
             '1.1' => new ServiceClosureArgument(new Reference(SemVerModel\v1\v1_1\User::class)),
             '2.0.alpha.1' => new ServiceClosureArgument(new Reference(SemVerModel\v2\v2_0_alpha_1\User::class)),
         ], $definition->getArgument(0));
+
+        $versions = $container->getParameter('dto_management.versions');
+        usort($versions, 'version_compare');
+        $this->assertEquals(['1.0', '1.1', '2.0-alpha.1'], $versions);
     }
 }

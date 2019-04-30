@@ -16,6 +16,8 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class DtoManagementExtension extends Extension
 {
+    private $versions = [];
+
     /**
      * {@inheritdoc}
      */
@@ -29,6 +31,7 @@ class DtoManagementExtension extends Extension
 
         /** @var Definition[] $locators */
         $locators = [];
+        $this->versions = [];
         foreach ($this->process($container, $config['namespaces']) as $interface => $definition) {
             if (\in_array($interface, $config['exclude'], true)) {
                 continue;
@@ -43,8 +46,8 @@ class DtoManagementExtension extends Extension
             }
         }
 
-        $container->findDefinition(ServiceLocatorRegistry::class)
-            ->setArgument(0, $locators);
+        $container->findDefinition(ServiceLocatorRegistry::class)->setArgument(0, $locators);
+        $container->setParameter('dto_management.versions', \array_values($this->versions));
     }
 
     /**
@@ -130,7 +133,9 @@ class DtoManagementExtension extends Extension
                 continue;
             }
 
-            $models[\str_replace('_', '.', $m[1])] = new ServiceClosureArgument(new Reference($reflector->getName()));
+            $version = \str_replace('_', '.', $m[1]);
+            $models[$version] = new ServiceClosureArgument(new Reference($reflector->getName()));
+            $this->versions[$version] = \preg_replace('/(?<=\d)\.(?=[a-z])/i', '-', $version);
         }
 
         return $models;
