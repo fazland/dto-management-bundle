@@ -17,3 +17,7 @@ underscored:
 camelized:
     path: /camelized
     defaults: { _controller: 'AppBundle:Test:camelized' }
+
+semver:
+    path: /semver/{_version}
+    defaults: { _controller: 'AppBundle:Test:semver' }

@@ -16,7 +16,7 @@ class ProxyTest extends WebTestCase
 {
     public function testShouldReturn401IfNotLoggedIn(): void
     {
-        $client = $this->createClient();
+        $client = self::createClient();
         $client->request('GET', '/');
 
         $response = $client->getResponse();
@@ -25,7 +25,7 @@ class ProxyTest extends WebTestCase
 
     public function testShouldGetAndSetPropertyWithUnderscore(): void
     {
-        $client = $this->createClient();
+        $client = self::createClient();
         $client->request('GET', '/underscored', [], [], [
             'PHP_AUTH_USER' => 'user',
             'PHP_AUTH_PW' => 'user',
@@ -35,7 +35,7 @@ class ProxyTest extends WebTestCase
         self::assertEquals(200, $response->getStatusCode());
         self::assertEquals('"test_one"', $response->getContent());
 
-        $client = $this->createClient();
+        $client = self::createClient();
         $client->request('GET', '/camelized', [], [], [
             'PHP_AUTH_USER' => 'user',
             'PHP_AUTH_PW' => 'user',
@@ -48,7 +48,7 @@ class ProxyTest extends WebTestCase
 
     public function testShouldThrowAccessDeniedExceptionIfRoleDoesNotMatch(): void
     {
-        $client = $this->createClient();
+        $client = self::createClient();
         $client->request('GET', '/protected', [], [], [
             'PHP_AUTH_USER' => 'user',
             'PHP_AUTH_PW' => 'user',
@@ -60,7 +60,7 @@ class ProxyTest extends WebTestCase
 
     public function testShouldExecuteOperationsIfRolesAreCorrect(): void
     {
-        $client = $this->createClient();
+        $client = self::createClient();
         $client->request('GET', '/protected', [], [], [
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'admin',
@@ -73,7 +73,7 @@ class ProxyTest extends WebTestCase
 
     public function testShouldReturnNullIfOnInvalidFlagsIsSet(): void
     {
-        $client = $this->createClient();
+        $client = self::createClient();
         $client->request('GET', '/unavailable', [], [], [
             'PHP_AUTH_USER' => 'admin',
             'PHP_AUTH_PW' => 'admin',
@@ -84,9 +84,42 @@ class ProxyTest extends WebTestCase
         self::assertEquals('null', $response->getContent());
     }
 
+    public function testShouldRetrieveTheCorrectSemVerDto(): void
+    {
+        $client = self::createClient();
+        $client->request('GET', '/semver/1.0', [], [], [
+            'PHP_AUTH_USER' => 'admin',
+            'PHP_AUTH_PW' => 'admin',
+        ]);
+
+        $response = $client->getResponse();
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals('"test"', $response->getContent());
+
+        $client = self::createClient();
+        $client->request('GET', '/semver/1.1', [], [], [
+            'PHP_AUTH_USER' => 'admin',
+            'PHP_AUTH_PW' => 'admin',
+        ]);
+
+        $response = $client->getResponse();
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals('"test1.1"', $response->getContent());
+
+        $client = self::createClient();
+        $client->request('GET', '/semver/2.0-alpha-1', [], [], [
+            'PHP_AUTH_USER' => 'admin',
+            'PHP_AUTH_PW' => 'admin',
+        ]);
+
+        $response = $client->getResponse();
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals('"test2.0-alpha-1"', $response->getContent());
+    }
+
     public function testExcludedInterfacesShouldNotBeRegistered(): void
     {
-        $client = $this->createClient();
+        $client = self::createClient();
         $client->getKernel()->boot();
 
         $container = $client->getContainer();
