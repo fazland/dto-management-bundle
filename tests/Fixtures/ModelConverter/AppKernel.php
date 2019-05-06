@@ -4,7 +4,6 @@ namespace Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter;
 
 use Fazland\DtoManagementBundle\DtoManagementBundle;
 use Fazland\DtoManagementBundle\Tests\Fixtures\TestKernel;
-use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -19,7 +18,6 @@ class AppKernel extends TestKernel
     {
         return [
             new FrameworkBundle(),
-            new SensioFrameworkExtraBundle(),
             new DtoManagementBundle(),
             new AppBundle(),
         ];
