@@ -19,9 +19,9 @@
             <argument type="service" id="request_stack" on-invalid="null" />
         </service>
 
-        <service id="Fazland\DtoManagementBundle\ParamConverter\ApiModelParamConverter">
+        <service id="Fazland\DtoManagementBundle\ArgumentResolver\DtoArgumentResolver">
             <argument type="service" id="Fazland\DtoManagementBundle\InterfaceResolver\Resolver" />
-            <tag name="request.param_converter" />
+            <tag name="controller.argument_value_resolver" priority="35" />
         </service>
 
         <service id="Fazland\DtoManagementBundle\Serializer\EventSubscriber\DtoProxySubscriber">

@@ -2,8 +2,8 @@
 
 namespace Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Controller;
 
-use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\SemVerModel;
 use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Model\Interfaces\UserInterface;
+use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\SemVerModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\Test\VarDumperTestTrait;

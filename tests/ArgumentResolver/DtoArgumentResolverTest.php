@@ -1,24 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace Fazland\DtoManagementBundle\Tests\ParamConverter;
+namespace Fazland\DtoManagementBundle\Tests\ArgumentResolver;
 
+use Fazland\DtoManagementBundle\ArgumentResolver\DtoArgumentResolver;
 use Fazland\DtoManagementBundle\Finder\ServiceLocatorRegistry;
 use Fazland\DtoManagementBundle\InterfaceResolver\ResolverInterface;
-use Fazland\DtoManagementBundle\ParamConverter\ApiModelParamConverter;
 use Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\AppKernel;
 use Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\Model\Interfaces\UserInterface;
 use Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\Model\v2017\v20171128\User as User20171128;
 use Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\Model\v2017\v20171215\User as User20171215;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class ApiModelParamConverterTest extends WebTestCase
+class DtoArgumentResolverTest extends WebTestCase
 {
     /**
      * @var ServiceLocatorRegistry|ObjectProphecy
@@ -31,7 +31,7 @@ class ApiModelParamConverterTest extends WebTestCase
     private $resolver;
 
     /**
-     * @var ApiModelParamConverter
+     * @var DtoArgumentResolver
      */
     private $converter;
 
@@ -42,7 +42,7 @@ class ApiModelParamConverterTest extends WebTestCase
     {
         $this->resolver = $this->prophesize(ResolverInterface::class);
         $this->serviceLocatorRegistry = $this->prophesize(ServiceLocatorRegistry::class);
-        $this->converter = new ApiModelParamConverter($this->resolver->reveal());
+        $this->converter = new DtoArgumentResolver($this->resolver->reveal());
     }
 
     /**
@@ -52,38 +52,31 @@ class ApiModelParamConverterTest extends WebTestCase
     {
         $request = $this->prophesize(Request::class);
 
-        $converter = new ParamConverter([
-            'name' => 'user',
-            'class' => UserInterface::class,
-        ]);
-
+        $argument = new ArgumentMetadata('user', UserInterface::class, false, false, null);
         $request->attributes = new ParameterBag(['_version' => '20171128']);
 
         $this->resolver->resolve(UserInterface::class, $request->reveal())
             ->willThrow(new ServiceNotFoundException('20171128'));
-        self::assertFalse($this->converter->apply($request->reveal(), $converter));
+        foreach ($this->converter->resolve($request->reveal(), $argument) as $argument) {
+        }
     }
 
     public function testSupportsShouldReturnTrueIfModelIsPresentInRegistry(): void
     {
-        $converter = new ParamConverter([
-            'name' => 'user',
-            'class' => UserInterface::class,
-        ]);
+        $request = $this->prophesize(Request::class);
+        $argument = new ArgumentMetadata('user', UserInterface::class, false, false, null);
 
         $this->resolver->has(UserInterface::class)->willReturn(true);
-        self::assertTrue($this->converter->supports($converter));
+        self::assertTrue($this->converter->supports($request->reveal(), $argument));
     }
 
     public function testSupportsShouldReturnFalseIfModelIsNotPresentInRegistry(): void
     {
-        $converter = new ParamConverter([
-            'name' => 'user',
-            'class' => UserInterface::class,
-        ]);
+        $request = $this->prophesize(Request::class);
+        $argument = new ArgumentMetadata('user', UserInterface::class, false, false, null);
 
         $this->resolver->has(UserInterface::class)->willReturn(false);
-        self::assertFalse($this->converter->supports($converter));
+        self::assertFalse($this->converter->supports($request->reveal(), $argument));
     }
 
     /**

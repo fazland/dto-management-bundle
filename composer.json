@@ -22,7 +22,6 @@
         "doctrine/annotations": "^1.6",
         "kcs/class-finder": "^0.1,>=0.1.2",
         "ocramius/proxy-manager": "^2.1",
-        "sensio/framework-extra-bundle": "^5.1",
         "symfony/config": "^3.4|^4.0",
         "symfony/framework-bundle": "^3.4|^4.0"
     },

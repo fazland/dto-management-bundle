@@ -35,7 +35,7 @@ class AddInterceptorsPass implements CompilerPassInterface
         );
 
         if (! @\mkdir($cacheDir, 0777, true) && ! \is_dir($cacheDir)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $cacheDir));
+            throw new \RuntimeException(\sprintf('Directory "%s" was not created', $cacheDir));
         }
 
         $this->proxyFactory = $container->get('fazland.dto-management.proxy_factory');
