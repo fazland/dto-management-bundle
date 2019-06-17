@@ -26,7 +26,10 @@ class DtoProxySubscriberTest extends TestCase
 
     public function testGetSubscribedEvents(): void
     {
-        self::assertEquals([Events::PRE_SERIALIZE => ['onPreSerialize', 20]], DtoProxySubscriber::getSubscribedEvents());
+        self::assertEquals([
+            'serializer.pre_serialize' => ['onPreSerialize', 20],
+            PreSerializeEvent::class => ['onPreSerialize', 20]
+        ], DtoProxySubscriber::getSubscribedEvents());
     }
 
     public function getNonProxyValues(): iterable
@@ -60,14 +63,14 @@ class DtoProxySubscriberTest extends TestCase
 
         $proxy = new FooProxy();
 
-        $type = $this->prophesize(Type::class);
-        $type->is(\get_class($proxy))->willReturn(true);
+        $type = Type::parse(\get_class($proxy));
 
         $event->getData()->willReturn($proxy);
         $event->getType()->willReturn($type);
 
-        $type->setName(\get_parent_class($proxy))->shouldBeCalled();
-
         $this->subscriber->onPreSerialize($event->reveal());
+
+        self::assertEquals(\get_parent_class($proxy), $type->name);
+        self::assertNull($type->metadata);
     }
 }

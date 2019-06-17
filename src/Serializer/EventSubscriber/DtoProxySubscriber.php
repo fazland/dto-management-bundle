@@ -18,7 +18,8 @@ class DtoProxySubscriber implements EventSubscriberInterface
 
         $type = $event->getType();
         if ($type->is(\get_class($object))) {
-            $type->setName(\get_parent_class($object));
+            $type->name = \get_parent_class($object);
+            $type->metadata = null;
         }
     }
 
@@ -30,6 +31,7 @@ class DtoProxySubscriber implements EventSubscriberInterface
         return [
             // Cannot use the constant here, as if serializer is non-existent an error would be thrown.
             'serializer.pre_serialize' => ['onPreSerialize', 20],
+            PreSerializeEvent::class => ['onPreSerialize', 20],
         ];
     }
 }
