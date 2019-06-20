@@ -1,0 +1,29 @@
+{
+    "registrar": [
+        {
+            "signature": [
+                "Fazland\\DtoManagementBundle\\InterfaceResolver\\ResolverInterface::resolve"
+            ],
+            "signatures": [
+                {
+                    "class": "Fazland\\DtoManagementBundle\\InterfaceResolver\\ResolverInterface",
+                    "method": "resolve",
+                    "index": 0,
+                    "type": "type"
+                }
+            ],
+            "provider": "interface",
+            "language": "php"
+        },
+        {
+            "signatures": [
+                {
+                    "class": "Fazland\\DtoManagementBundle\\Annotation\\Transform",
+                    "type": "annotation"
+                }
+            ],
+            "provider": "symfony.services",
+            "language": "php"
+        }
+    ]
+}
