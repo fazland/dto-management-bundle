@@ -16,6 +16,7 @@ use ProxyManager\ProxyGenerator\Util\Properties;
 use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage as BaseExpressionLanguage;
 use Symfony\Component\Security\Core\Security as SymfonySecurity;
+use Symfony\Contracts\Service\ServiceSubscriberInterface as ContractsServiceSubscriberInterface;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\MethodGenerator as ZendMethodGenerator;
 use Zend\Code\Generator\ParameterGenerator;
@@ -44,8 +45,16 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
     {
         CanProxyAssertion::assertClassCanBeProxied($originalClass);
 
-        $publicProperties = new PublicPropertiesMap(Properties::fromReflectionClass($originalClass));
-        $interfaces = [ProxyInterface::class, ServiceSubscriberInterface::class];
+        $excludedProperties = [];
+        foreach ($originalClass->getProperties(\ReflectionProperty::IS_PUBLIC) as $key => $property) {
+            if (! \array_key_exists($property->name, $options['property_interceptors'])) {
+                $excludedProperties[] = $property->name;
+            }
+        }
+
+        $publicProperties = Properties::fromReflectionClass($originalClass)->filter($excludedProperties);
+        $publicPropertiesMap = new PublicPropertiesMap($publicProperties);
+        $interfaces = [ProxyInterface::class, \interface_exists(ContractsServiceSubscriberInterface::class) ? ContractsServiceSubscriberInterface::class : ServiceSubscriberInterface::class];
 
         if ($originalClass->isInterface()) {
             $interfaces[] = $originalClass->getName();
@@ -57,10 +66,9 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
         $classGenerator->addPropertyFromGenerator($valueHolder = new ValueHolderProperty());
         $valueHolder->setDocBlock('@var \\'.$originalClass->getName().' Object containing the public properties');
 
-        $classGenerator->addPropertyFromGenerator($publicProperties);
-
+        $classGenerator->addPropertyFromGenerator($publicPropertiesMap);
         $classGenerator->addPropertyFromGenerator($locatorHolder = new ServiceLocatorHolder());
-        $classGenerator->addMethodFromGenerator(MethodGenerator\Constructor::generateMethod($originalClass, $valueHolder, $locatorHolder));
+        $classGenerator->addMethodFromGenerator(MethodGenerator\Constructor::generateMethod($originalClass, $valueHolder, $locatorHolder, $publicProperties));
 
         foreach (ProxiedMethodsFilter::getProxiedMethods($originalClass) as $proxiedMethod) {
             $interceptors = $this->generateInterceptors($proxiedMethod, $options['method_interceptors'][$proxiedMethod->getName()] ?? [], $locatorHolder);
@@ -80,8 +88,8 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
             $propertyInterceptors[$name] = $this->generateInterceptors(null, $interceptors, $locatorHolder);
         }
 
-        $classGenerator->addMethodFromGenerator(new MethodGenerator\MagicSet($originalClass, $valueHolder, $publicProperties, $propertyInterceptors));
-        $classGenerator->addMethodFromGenerator(new MethodGenerator\MagicGet($originalClass, $valueHolder, $publicProperties));
+        $classGenerator->addMethodFromGenerator(new MethodGenerator\MagicSet($originalClass, $valueHolder, $publicPropertiesMap, $propertyInterceptors));
+        $classGenerator->addMethodFromGenerator(new MethodGenerator\MagicGet($originalClass, $valueHolder, $publicPropertiesMap));
         $classGenerator->addMethodFromGenerator(new MethodGenerator\MagicIsset($originalClass, $valueHolder));
         $classGenerator->addMethodFromGenerator(new MethodGenerator\GetSubscribedServices($originalClass, $options['services']));
     }

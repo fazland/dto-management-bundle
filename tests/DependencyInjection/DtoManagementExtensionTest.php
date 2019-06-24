@@ -77,7 +77,7 @@ class DtoManagementExtensionTest extends TestCase
         ], $definition->getArgument(0));
 
         $versions = $container->getParameter('dto_management.versions');
-        usort($versions, 'version_compare');
-        $this->assertEquals(['1.0', '1.1', '2.0-alpha.1'], $versions);
+        \usort($versions, 'version_compare');
+        self::assertEquals(['1.0', '1.1', '2.0-alpha.1'], $versions);
     }
 }

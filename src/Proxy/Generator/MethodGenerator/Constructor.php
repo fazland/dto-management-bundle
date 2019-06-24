@@ -17,13 +17,14 @@ class Constructor extends MethodGenerator
      * @param \ReflectionClass  $originalClass
      * @param PropertyGenerator $valueHolder
      * @param PropertyGenerator $locator
+     * @param Properties|null   $properties
      *
      * @return self
      */
-    public static function generateMethod(\ReflectionClass $originalClass, PropertyGenerator $valueHolder, PropertyGenerator $locator): self
+    public static function generateMethod(\ReflectionClass $originalClass, PropertyGenerator $valueHolder, PropertyGenerator $locator, ?Properties $properties = null): self
     {
         $originalConstructor = self::getConstructor($originalClass);
-        $originalProperties = Properties::fromReflectionClass($originalClass);
+        $originalProperties = $properties ?? Properties::fromReflectionClass($originalClass);
 
         $constructor = $originalConstructor
             ? self::fromReflection($originalConstructor)
@@ -33,7 +34,7 @@ class Constructor extends MethodGenerator
 
         $constructor->setDocBlock('{@inheritDoc}');
         $constructor->setBody(
-            '$this->'.$valueHolder->getName().' = '.self::generateAnonymousClassValueHolder($originalProperties)."\n"
+            '$this->'.$valueHolder->getName().' = '.self::generateAnonymousClassValueHolder($originalProperties, $originalClass->getDefaultProperties())."\n"
             .'$this->'.$locator->getName().' = $'.$locator->getName().';'."\n"
             .self::generateUnsetAccessiblePropertiesCode($originalProperties)
             .self::generateOriginalConstructorCall($originalClass)
@@ -92,13 +93,15 @@ class Constructor extends MethodGenerator
         return \reset($constructors) ?: null;
     }
 
-    private static function generateAnonymousClassValueHolder(Properties $properties): string
+    private static function generateAnonymousClassValueHolder(Properties $properties, array $defaults): string
     {
         $accessibleProperties = $properties->getPublicProperties();
 
         return "new class extends \stdClass {\n".
-            \implode("\n", \array_map(static function (\ReflectionProperty $property): string {
-                return '    public $'.$property->getName().';';
+            \implode("\n", \array_map(static function (\ReflectionProperty $property) use (&$defaults): string {
+                $name = $property->getName();
+
+                return '    public $'.$name.(\array_key_exists($name, $defaults) ? ' = '.\var_export($defaults[$name], true) : '').';';
             }, $accessibleProperties))
             ."\n};";
     }

@@ -9,6 +9,11 @@ use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Transformer\TestTransform;
 
 class User implements UserInterface
 {
+    public $barPublic = 'pubb';
+
+    /**
+     * @Security("true")
+     */
     public $barBar = 'test';
 
     /**
