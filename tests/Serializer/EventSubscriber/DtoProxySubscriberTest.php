@@ -4,7 +4,6 @@ namespace Fazland\DtoManagementBundle\Tests\Serializer\EventSubscriber;
 
 use Fazland\DtoManagementBundle\Serializer\EventSubscriber\DtoProxySubscriber;
 use Fazland\DtoManagementBundle\Tests\Fixtures\Model\FooProxy;
-use Kcs\Serializer\EventDispatcher\Events;
 use Kcs\Serializer\EventDispatcher\PreSerializeEvent;
 use Kcs\Serializer\Type\Type;
 use PHPUnit\Framework\TestCase;
@@ -28,7 +27,7 @@ class DtoProxySubscriberTest extends TestCase
     {
         self::assertEquals([
             'serializer.pre_serialize' => ['onPreSerialize', 20],
-            PreSerializeEvent::class => ['onPreSerialize', 20]
+            PreSerializeEvent::class => ['onPreSerialize', 20],
         ], DtoProxySubscriber::getSubscribedEvents());
     }
 

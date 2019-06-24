@@ -4,6 +4,7 @@ namespace Fazland\DtoManagementBundle;
 
 use Fazland\DtoManagementBundle\DependencyInjection\Compiler\AddInterceptorsPass;
 use Fazland\DtoManagementBundle\DependencyInjection\Compiler\DtoProxySerializerPass;
+use Fazland\DtoManagementBundle\DependencyInjection\Compiler\RegisterDtoProxyCasterPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -17,6 +18,7 @@ final class DtoManagementBundle extends Bundle
         $container
             ->addCompilerPass(new AddInterceptorsPass())
             ->addCompilerPass(new DtoProxySerializerPass())
+            ->addCompilerPass(new RegisterDtoProxyCasterPass())
         ;
     }
 

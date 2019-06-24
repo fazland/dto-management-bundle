@@ -5,9 +5,11 @@ namespace Fazland\DtoManagementBundle;
 use Fazland\DtoManagementBundle\InterfaceResolver\ResolverInterface;
 use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\AppKernel;
 use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Model\Interfaces\ExcludedInterface;
+use Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Model\Interfaces\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\VarDumper\Dumper\CliDumper;
 
 /**
  * @group functional
@@ -124,6 +126,27 @@ class ProxyTest extends WebTestCase
 
         $container = $client->getContainer();
         self::assertFalse($container->get(ResolverInterface::class)->has(ExcludedInterface::class));
+    }
+
+    public function testProxyCasterIsRegistered(): void
+    {
+        $client = self::createClient();
+        $client->getKernel()->boot();
+
+        $container = $client->getContainer();
+        $user = $container->get(ResolverInterface::class)->resolve(UserInterface::class);
+
+        $dumper = new CliDumper();
+        $cloner = $container->get('var_dumper.cloner');
+
+        self::assertStringMatchesFormat(<<<DUMP
+Fazland\\DtoManagementBundle\\Tests\\Fixtures\\Proxy\\Model\\v2017\\v20171215\\User (proxy) {#%d
+  +barPublic: "pubb"
+  +barBar: "test"
+  +foobar: "ciao"
+}
+DUMP
+        , $dumper->dump($cloner->cloneVar($user), true));
     }
 
     /**
