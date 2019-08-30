@@ -18,6 +18,10 @@ camelized:
     path: /camelized
     defaults: { _controller: 'AppBundle:Test:camelized' }
 
+camelized_public:
+    path: /camelized_public
+    defaults: { _controller: 'AppBundle:Test:camelizedPublic' }
+
 semver:
     path: /semver/{_version}
     defaults: { _controller: 'AppBundle:Test:semver' }

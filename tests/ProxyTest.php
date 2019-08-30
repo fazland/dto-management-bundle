@@ -48,6 +48,19 @@ class ProxyTest extends WebTestCase
         self::assertEquals('"test_two"', $response->getContent());
     }
 
+    public function testShouldGetAndSetPublicPropertyWithUnderscore(): void
+    {
+        $client = self::createClient();
+        $client->request('GET', '/camelized_public', [], [], [
+            'PHP_AUTH_USER' => 'user',
+            'PHP_AUTH_PW' => 'user',
+        ]);
+
+        $response = $client->getResponse();
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals('"pubb""test_two"', $response->getContent());
+    }
+
     public function testShouldThrowAccessDeniedExceptionIfRoleDoesNotMatch(): void
     {
         $client = self::createClient();
