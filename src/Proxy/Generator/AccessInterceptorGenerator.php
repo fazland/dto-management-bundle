@@ -45,16 +45,15 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
     {
         CanProxyAssertion::assertClassCanBeProxied($originalClass);
 
-        $excludedProperties = [];
-        foreach ($originalClass->getProperties(\ReflectionProperty::IS_PUBLIC) as $key => $property) {
-            if (! \array_key_exists($property->name, $options['property_interceptors'])) {
-                $excludedProperties[] = $property->name;
-            }
-        }
-
-        $publicProperties = Properties::fromReflectionClass($originalClass)->filter($excludedProperties);
+        $publicProperties = Properties::fromReflectionClass($originalClass);
         $publicPropertiesMap = new PublicPropertiesMap($publicProperties);
-        $interfaces = [ProxyInterface::class, \interface_exists(ContractsServiceSubscriberInterface::class) ? ContractsServiceSubscriberInterface::class : ServiceSubscriberInterface::class];
+        $interfaces = [
+            ProxyInterface::class,
+            \interface_exists(ContractsServiceSubscriberInterface::class)
+                ? ContractsServiceSubscriberInterface::class
+                : ServiceSubscriberInterface::class
+            ,
+        ];
 
         if ($originalClass->isInterface()) {
             $interfaces[] = $originalClass->getName();
