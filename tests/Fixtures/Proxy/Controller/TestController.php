@@ -38,14 +38,6 @@ class TestController extends AbstractController
         return new Response($this->getDump($user->bar_bar));
     }
 
-    public function camelizedPublicAction(UserInterface $user): Response
-    {
-        $tmp = $user->bar_public;
-        $user->barPublic = 'test_two';
-
-        return new Response($this->getDump($tmp).$this->getDump($user->bar_public));
-    }
-
     public function unavailableAction(UserInterface $user): Response
     {
         return new Response($this->getDump($user->getTest()));

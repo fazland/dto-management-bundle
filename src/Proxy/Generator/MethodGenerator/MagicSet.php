@@ -47,8 +47,6 @@ PHP;
             $callParent = <<<PHP
 if (isset(self::\${$publicProperties->getName()}[\$name])) {
     \$returnValue = (\$this->$valueHolderName->\$name = \$value);
-} else if (\\property_exists(\$this, \$camelized)) {
-    \$returnValue = & \$this->\$camelized;
 } else {
     $callParent
 }
@@ -58,8 +56,8 @@ PHP;
         }
 
         $body = <<<PHP
-\$camelized = \\lcfirst(\\str_replace(' ', '', \\ucwords(\\str_replace('_', ' ', \$name))));
 if (! isset(self::\${$publicProperties->getName()}[\$name])) {
+    \$camelized = \\lcfirst(\\str_replace(' ', '', \\ucwords(\\str_replace('_', ' ', \$name))));
     if (isset(self::\${$publicProperties->getName()}[\$camelized])) {
         \$name = \$camelized;
     }
