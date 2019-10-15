@@ -129,7 +129,7 @@ class DtoManagementExtension extends Extension
             }
 
             $container->addResource(new ClassExistenceResource($class, true));
-            if (! \preg_match('/^'.\str_replace('\\', '\\\\', $namespace).'\\\\v\d+\\\\v(.+)\\\\/', $class, $m)) {
+            if (! \preg_match('/^'.\str_replace('\\', '\\\\', $namespace).'\\\\v\d+\\\\v(.+?)\\\\/', $class, $m)) {
                 continue;
             }
 

@@ -63,7 +63,7 @@ class DtoManagementExtensionTest extends TestCase
         $definition = $container->getDefinition(ServiceLocatorRegistry::class);
 
         self::assertCount(1, $definition->getArguments());
-        self::assertCount(1, $arg = $definition->getArgument(0));
+        self::assertCount(2, $arg = $definition->getArgument(0));
         self::assertArrayHasKey(SemVerModel\Interfaces\UserInterface::class, $arg);
         self::assertInstanceOf(ServiceClosureArgument::class, $arg[SemVerModel\Interfaces\UserInterface::class]);
 
@@ -73,11 +73,12 @@ class DtoManagementExtensionTest extends TestCase
         self::assertEquals([
             '1.0' => new ServiceClosureArgument(new Reference(SemVerModel\v1\v1_0\User::class)),
             '1.1' => new ServiceClosureArgument(new Reference(SemVerModel\v1\v1_1\User::class)),
+            '1.2' => new ServiceClosureArgument(new Reference(SemVerModel\v1\v1_2\User\User::class)),
             '2.0.alpha.1' => new ServiceClosureArgument(new Reference(SemVerModel\v2\v2_0_alpha_1\User::class)),
         ], $definition->getArgument(0));
 
         $versions = $container->getParameter('dto_management.versions');
         \usort($versions, 'version_compare');
-        self::assertEquals(['1.0', '1.1', '2.0-alpha.1'], $versions);
+        self::assertEquals(['1.0', '1.1', '1.2', '2.0-alpha.1'], $versions);
     }
 }
