@@ -106,6 +106,8 @@ class DtoArgumentResolverTest extends WebTestCase
      */
     protected function tearDown(): void
     {
+        self::ensureKernelShutdown();
+
         $fs = new Filesystem();
         $fs->remove(__DIR__.'/../Fixtures/ModelConverter/cache');
         $fs->remove(__DIR__.'/../Fixtures/ModelConverter/logs');

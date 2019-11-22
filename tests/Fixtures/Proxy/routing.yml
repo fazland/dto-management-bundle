@@ -1,23 +1,23 @@
 index:
     path: /
-    defaults: { _controller: 'AppBundle:Test:index' }
+    defaults: { _controller: 'Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Controller\TestController:indexAction' }
 
 protected:
     path: /protected
-    defaults: { _controller: 'AppBundle:Test:protected' }
+    defaults: { _controller: 'Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Controller\TestController:protectedAction' }
 
 unavailable:
     path: /unavailable
-    defaults: { _controller: 'AppBundle:Test:unavailable' }
+    defaults: { _controller: 'Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Controller\TestController:unavailableAction' }
 
 underscored:
     path: /underscored
-    defaults: { _controller: 'AppBundle:Test:underscored' }
+    defaults: { _controller: 'Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Controller\TestController:underscoredAction' }
 
 camelized:
     path: /camelized
-    defaults: { _controller: 'AppBundle:Test:camelized' }
+    defaults: { _controller: 'Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Controller\TestController:camelizedAction' }
 
 semver:
     path: /semver/{_version}
-    defaults: { _controller: 'AppBundle:Test:semver' }
+    defaults: { _controller: 'Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Controller\TestController:semverAction' }

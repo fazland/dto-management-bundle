@@ -37,6 +37,8 @@ class ProxyTest extends WebTestCase
         self::assertEquals(200, $response->getStatusCode());
         self::assertEquals('"test_one"', $response->getContent());
 
+        self::ensureKernelShutdown();
+
         $client = self::createClient();
         $client->request('GET', '/camelized', [], [], [
             'PHP_AUTH_USER' => 'user',
@@ -98,6 +100,8 @@ class ProxyTest extends WebTestCase
         self::assertEquals(200, $response->getStatusCode());
         self::assertEquals('"test"', $response->getContent());
 
+        self::ensureKernelShutdown();
+
         $client = self::createClient();
         $client->request('GET', '/semver/1.1', [], [], [
             'PHP_AUTH_USER' => 'admin',
@@ -107,6 +111,8 @@ class ProxyTest extends WebTestCase
         $response = $client->getResponse();
         self::assertEquals(200, $response->getStatusCode());
         self::assertEquals('"test1.1"', $response->getContent());
+
+        self::ensureKernelShutdown();
 
         $client = self::createClient();
         $client->request('GET', '/semver/2.0-alpha-1', [], [], [
@@ -162,6 +168,8 @@ DUMP
      */
     protected function tearDown(): void
     {
+        self::ensureKernelShutdown();
+
         $fs = new Filesystem();
         $fs->remove(static::$kernel->getCacheDir());
         $fs->remove(static::$kernel->getLogDir());

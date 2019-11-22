@@ -29,6 +29,10 @@ services:
     Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Transformer\TestTransform: ~
     Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Security\AccessDeniedHandler: ~
 
+    Fazland\DtoManagementBundle\Tests\Fixtures\Proxy\Controller\TestController:
+        autoconfigure: true
+        autowire: true
+
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext

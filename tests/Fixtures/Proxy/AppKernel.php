@@ -60,4 +60,14 @@ class AppKernel extends TestKernel
 
         return $dir;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getKernelParameters(): array
+    {
+        return parent::getKernelParameters() + [
+                'kernel.root_dir' => __DIR__,
+            ];
+    }
 }

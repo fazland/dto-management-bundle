@@ -14,3 +14,7 @@ services:
         exclude: './Model/{Interfaces}'
         autowire: true
         shared: false
+
+    Fazland\DtoManagementBundle\Tests\Fixtures\ModelConverter\Controller\TestController:
+        autoconfigure: true
+        autowire: true

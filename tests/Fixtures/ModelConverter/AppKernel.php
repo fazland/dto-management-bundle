@@ -31,7 +31,7 @@ class AppKernel extends TestKernel
         parent::boot();
 
         $this->getContainer()->get('event_dispatcher')
-            ->addListener(KernelEvents::REQUEST, function (GetResponseEvent $event) {
+            ->addListener(KernelEvents::REQUEST, static function ($event) {
                 $req = $event->getRequest();
 
                 // Tests set the X-Version header, set the version attribute accordingly.
@@ -46,5 +46,15 @@ class AppKernel extends TestKernel
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(__DIR__.'/config.yml');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getKernelParameters(): array
+    {
+        return parent::getKernelParameters() + [
+                'kernel.root_dir' => __DIR__,
+            ];
     }
 }

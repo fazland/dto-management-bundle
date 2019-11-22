@@ -28,4 +28,14 @@ class AppKernel extends TestKernel
     {
         $loader->load(__DIR__.'/config.yml');
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getKernelParameters(): array
+    {
+        return parent::getKernelParameters() + [
+            'kernel.root_dir' => __DIR__,
+        ];
+    }
 }
