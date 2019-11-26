@@ -5,6 +5,7 @@ namespace Fazland\DtoManagementBundle\Tests\Finder;
 use Fazland\DtoManagementBundle\Finder\ServiceLocator;
 use Fazland\DtoManagementBundle\Tests\Fixtures\DependencyInjection\Model\v2017\v20171215\User;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 class ServiceLocatorTest extends TestCase
 {
@@ -33,7 +34,7 @@ class ServiceLocatorTest extends TestCase
 
     public function testLocatorShouldBeInvokable(): void
     {
-        self::assertInternalType('callable', $this->locator);
+        self::assertIsCallable($this->locator);
     }
 
     public function testLocatorInvokingWithNonExistentServiceReturnsNull(): void
@@ -47,11 +48,10 @@ class ServiceLocatorTest extends TestCase
         self::assertInstanceOf(User::class, $this->locator->get(20180101));
     }
 
-    /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
-     */
     public function testLocatorGetShouldThrowIfNoImplementationIsAvailableForDate(): void
     {
+        $this->expectException(ServiceNotFoundException::class);
+
         $this->locator->get(20150101);
     }
 

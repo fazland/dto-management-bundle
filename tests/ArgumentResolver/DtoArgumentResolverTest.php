@@ -16,6 +16,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class DtoArgumentResolverTest extends WebTestCase
@@ -45,11 +46,10 @@ class DtoArgumentResolverTest extends WebTestCase
         $this->converter = new DtoArgumentResolver($this->resolver->reveal());
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
     public function testApplyShouldThrowHttpNotFoundExceptionIfServiceCannotBeFound(): void
     {
+        $this->expectException(NotFoundHttpException::class);
+
         $request = $this->prophesize(Request::class);
 
         $argument = new ArgumentMetadata('user', UserInterface::class, false, false, null);

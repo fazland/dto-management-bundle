@@ -4,6 +4,7 @@ namespace Fazland\DtoManagementBundle\Tests\DependencyInjection;
 
 use Fazland\DtoManagementBundle\DependencyInjection\Configuration;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 
 class ConfigurationTest extends TestCase
@@ -21,11 +22,9 @@ class ConfigurationTest extends TestCase
         $this->processor = new Processor();
     }
 
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     */
     public function testNoDefaultConfigShouldThrow(): void
     {
+        $this->expectException(InvalidConfigurationException::class);
         $this->getConfiguration([
             'namespaces' => [],
         ]);

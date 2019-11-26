@@ -41,11 +41,10 @@ class ResolverTest extends TestCase
         $this->resolver = new Resolver($this->registry->reveal(), $this->requestStack->reveal());
     }
 
-    /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
-     */
     public function testResolveShouldThrowServiceNotFoundException(): void
     {
+        $this->expectException(ServiceNotFoundException::class);
+
         $request = $this->prophesize(Request::class);
         $request->attributes = new ParameterBag(['_version' => '20171128']);
 
