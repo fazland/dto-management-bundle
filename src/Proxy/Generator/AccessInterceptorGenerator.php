@@ -62,8 +62,14 @@ class AccessInterceptorGenerator implements ProxyGeneratorInterface
         }
 
         $classGenerator->setImplementedInterfaces($interfaces);
-        $classGenerator->addPropertyFromGenerator($valueHolder = new ValueHolderProperty());
-        $valueHolder->setDocBlock('@var \\'.$originalClass->getName().' Object containing the public properties');
+
+        $holderReflectionClass = new \ReflectionClass(ValueHolderProperty::class);
+        if ($holderReflectionClass->getConstructor()->getNumberOfRequiredParameters() > 0) {
+            $classGenerator->addPropertyFromGenerator($valueHolder = new ValueHolderProperty($originalClass));
+        } else {
+            $classGenerator->addPropertyFromGenerator($valueHolder = new ValueHolderProperty());
+            $valueHolder->setDocBlock('@var \\'.$originalClass->getName().' Object containing the public properties');
+        }
 
         $classGenerator->addPropertyFromGenerator($publicPropertiesMap);
         $classGenerator->addPropertyFromGenerator($locatorHolder = new ServiceLocatorHolder());
