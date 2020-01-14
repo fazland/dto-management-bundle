@@ -6,7 +6,7 @@ This bundle helps to build versioned DTOs (Data Transfer Objects) and to minimiz
 
 Requirements
 ------------
-- php ^7.1
+- php ^7.2
 - symfony/symfony ^4.0
 
 Installation
