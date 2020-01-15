@@ -20,7 +20,7 @@
     "require": {
         "php": "^7.2",
         "doctrine/annotations": "^1.6",
-        "kcs/class-finder": "^0.1,>=0.1.2",
+        "kcs/class-finder": "dev-master",
         "ocramius/proxy-manager": "^2.1",
         "symfony/config": "^3.4|^4.0|^5.0",
         "symfony/framework-bundle": "^3.4|^4.0|^5.0"
